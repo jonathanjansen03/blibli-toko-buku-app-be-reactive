@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 @Component
 @AllArgsConstructor
 @Service
@@ -17,6 +19,10 @@ public class TransactionService {
 
     public Flux<Transaction> getAllTransaction() {
         return transactionRepository.findAll().switchIfEmpty(Flux.empty());
+    }
+
+    public Flux<Transaction> getMonthlyReport(int month, int year){
+        return transactionRepository.getMonthlyReport(month, year);
     }
 
     public Mono<Transaction> getTransactionById(final String id) {

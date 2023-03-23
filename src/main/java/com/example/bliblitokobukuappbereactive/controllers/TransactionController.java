@@ -21,10 +21,10 @@ public class TransactionController {
         return transactionService.getAllTransaction().collectList().block();
     }
 
-//    @GetMapping("/report")
-//    public List<Transaction> getMonthlyReport(@RequestParam int month, @RequestParam int year){
-//        return  transactionService.getMonthlyReport(month, year);
-//    }
+    @GetMapping("/report")
+    public List<Transaction> getMonthlyReport(@RequestParam int month, @RequestParam int year){
+        return transactionService.getMonthlyReport(month, year).collectList().block();
+    }
 
     @PostMapping(
             path = "/insert",
