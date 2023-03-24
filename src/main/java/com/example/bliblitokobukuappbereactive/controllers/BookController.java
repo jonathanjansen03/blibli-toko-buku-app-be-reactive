@@ -5,9 +5,11 @@ import com.example.bliblitokobukuappbereactive.services.BookService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @AllArgsConstructor
 @RestController
@@ -16,8 +18,8 @@ import java.util.List;
 public class BookController {
     private BookService bookService;
     @GetMapping
-    public List<Book> getAllBook() {
-        return bookService.getAllBook().collectList().block();
+    public List<Book> getAllBook() throws ExecutionException, InterruptedException {
+        return bookService.getAllBook().collectList().toFuture().get();
     }
     @PostMapping(
             path = "/insert",
