@@ -18,6 +18,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.reactive.function.BodyInserter;
+import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
@@ -62,17 +64,24 @@ public class BookCRUDTest {
     @Test
     public void insertBookTest() {
         Random random = new Random();
-        Book newBook = new Book(faker.company().name(), faker.name().fullName(), random.nextInt(100000), random.nextInt(100000));
+        Book newBook = new Book(
+                faker.company().name(),
+                faker.name().fullName(),
+                random.nextInt(100000),
+                random.nextInt(100000)
+        );
 
 //        bookController.insertBook(newBook).block();
 
         webTestClient.post().uri("/gdn-bookstore-api/books/insert")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .body(Mono.just(newBook), Book.class)
+                .body(BodyInserters.fromValue(newBook))
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody();
+                .expectBody()
+                .jsonPath("$.title").isEqualTo(newBook.getTitle())
+        ;
     }
 
 //    @Test
