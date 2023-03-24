@@ -27,7 +27,8 @@ public class BookController {
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
     public Mono<Book> insertBook(Book book) {
-        return bookService.insertBook(book);
+        return bookService.insertBook(book)
+                .doOnError(e -> Mono.error(new RuntimeException()));
     }
     @PutMapping(
             path = "/update/{bookId}",
