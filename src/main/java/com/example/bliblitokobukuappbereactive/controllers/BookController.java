@@ -37,9 +37,11 @@ public class BookController {
     public Mono<Book> updateBook(@RequestBody Book book, @PathVariable("bookId") String id) {
         return bookService.updateBook(id, book);
     }
-
-    public Mono<Book> findBookById(String id) {
-        return bookService.getBookById(id);
+    @GetMapping(
+            path = "/{bookId}"
+    )
+    public Mono<Book> findBookById(@PathVariable("bookId") final String bookId) {
+        return bookService.findBookById(bookId);
     }
 
     @DeleteMapping(path = "/delete/{bookId}")

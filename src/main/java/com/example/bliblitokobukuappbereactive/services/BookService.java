@@ -18,12 +18,12 @@ public class BookService {
         return bookRepository.findAll().switchIfEmpty(Flux.empty());
     }
 
-    public Mono<Book> getBookById(final String id) {
+    public Mono<Book> findBookById(final String id) {
         return bookRepository.findById(id);
     }
 
     public Mono<Book> updateBook(final String id, final Book book) {
-        Mono<Book> findBook = getBookById(id);
+        Mono<Book> findBook = findBookById(id);
         if(findBook == null) {
             return Mono.empty();
         }
@@ -35,7 +35,7 @@ public class BookService {
     }
 
     public Mono<Void> deleteBook(final String id) {
-        Mono<Book> findBook = getBookById(id);
+        Mono<Book> findBook = findBookById(id);
         if(findBook == null) {
             return Mono.empty();
         }
