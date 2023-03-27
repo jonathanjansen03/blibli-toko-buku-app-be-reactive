@@ -139,9 +139,23 @@ public class BookCRUDTest {
 
     @Test
     public void findBookTest() throws ExecutionException, InterruptedException {
-//        when(bookController.findBookById("641827cf1e728026597593c6"))
-//                .thenReturn(Mono.just(new Book()));
+        Random random = new Random();
+        Book newBook = new Book(
+                faker.company().name(),
+                faker.name().fullName(),
+                random.nextInt(100000),
+                random.nextInt(100000)
+        );
+        newBook.setId("1");
 
-        Book findBook = bookController.findBookById("641827cf1e728026597593c6").toFuture().get();
+        when(bookController.findBookById( newBook.getId()))
+                .thenReturn(Mono.just(newBook));
+
+        webTestClient.get().uri("/gdn-bookstore-api/books/{bookId}", newBook.getId())
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+        ;
     }
 }
