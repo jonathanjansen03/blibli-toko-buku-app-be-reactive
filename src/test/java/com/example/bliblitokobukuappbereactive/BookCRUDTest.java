@@ -27,6 +27,7 @@ import reactor.core.scheduler.Scheduler;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
 
 import static org.mockito.Mockito.when;
 
@@ -36,6 +37,10 @@ import static org.mockito.Mockito.when;
 public class BookCRUDTest {
     @Autowired
     private WebTestClient webTestClient;
+
+    @Autowired
+    private BookRepository bookRepository;
+
     @Mock
     BookService bookService;
     @InjectMocks
@@ -59,7 +64,8 @@ public class BookCRUDTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBodyList(Book.class);
+                .expectBodyList(Book.class)
+        ;
     }
     @Test
     public void insertBookTest() {
@@ -84,17 +90,31 @@ public class BookCRUDTest {
         ;
     }
 
-//    @Test
-//    public void updateBookTest() {
+    @Test
+    public void updateBookTest() throws ExecutionException, InterruptedException {
 //        List<Book> books = bookController.getAllBook();
 //        Book book = books.get(0);
+//        logger.info(book.getId());
 //        bookService.updateBook(book.getId(),book).subscribe();
-//    }
+
+        Book findBook = bookRepository.findById("641827cf1e728026597593c6").block();
 //
-//    @Test
-//    public void deleteBookTest() {
+//        assert findBook != null;
+//        webTestClient.put().uri("/gdn-bookstore-api/books/update/{bookId}", findBook.getId())
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .accept(MediaType.APPLICATION_JSON)
+//                .bodyValue(findBook)
+//                .exchange()
+//                .expectStatus().isOk()
+//                .expectBody()
+//                .jsonPath("$.title").isEqualTo(findBook.getTitle())
+//        ;
+    }
+
+    @Test
+    public void deleteBookTest() {
 //        List<Book> books = bookController.getAllBook();
 //        Book book = books.get(0);
 //        bookService.deleteBook(book.getId()).subscribe();
-//    }
+    }
 }

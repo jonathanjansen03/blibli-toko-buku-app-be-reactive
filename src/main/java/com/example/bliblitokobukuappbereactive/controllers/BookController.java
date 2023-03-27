@@ -38,6 +38,10 @@ public class BookController {
         return bookService.updateBook(id, book);
     }
 
+    public Mono<Book> findBookById(String id) {
+        return bookService.getBookById(id);
+    }
+
     @DeleteMapping(path = "/delete/{bookId}")
     public Mono<Void> deleteBook(@PathVariable("bookId") String id){
         return bookService.deleteBook(id);
