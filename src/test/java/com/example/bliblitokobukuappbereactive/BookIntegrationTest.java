@@ -5,6 +5,7 @@ import com.example.bliblitokobukuappbereactive.models.Book;
 import com.example.bliblitokobukuappbereactive.repositories.BookRepository;
 import com.github.javafaker.Faker;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,10 +35,17 @@ public class BookIntegrationTest {
 
     private final Logger logger = LoggerFactory.getLogger(BookUnitTest.class);
     private final Faker faker = new Faker();
+    private Book book;
 
     @BeforeEach
     public void before(){
         System.out.println("Before Each Test");
+        book = createSingleDummyBook();
+        bookRepository.save(book).subscribe();
+    }
+
+    @AfterEach
+    public void after() {
         bookRepository.deleteAll().subscribe();
     }
 
@@ -54,9 +62,6 @@ public class BookIntegrationTest {
 
     @Test
     public void getAllBookTest() {
-        Book book = createSingleDummyBook();
-
-        bookRepository.save(book).subscribe();
 
         webTestClient.get().uri("/gdn-bookstore-api/books/")
                 .exchange()
@@ -68,7 +73,6 @@ public class BookIntegrationTest {
     }
     @Test
     public void insertSingleBookTest() {
-        Book book = createSingleDummyBook();
 
         webTestClient.post().uri("/gdn-bookstore-api/books/insert")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -86,11 +90,10 @@ public class BookIntegrationTest {
 
     @Test
     public void updateSingleBook() {
-        Book book = createSingleDummyBook();
 
-        bookRepository.save(book).subscribe();
-
-        book = bookRepository.findAll().blockFirst();
+        book = (Book) bookRepository.findAll()
+                .collectList()
+                .map(books -> books.stream().findFirst()).subscribe();
 
         book.setStock(0);
         book.setTitle("Changing");
@@ -115,7 +118,9 @@ public class BookIntegrationTest {
 
         bookRepository.save(book).subscribe();
 
-        book = bookRepository.findAll().blockFirst();
+        book = (Book) bookRepository.findAll()
+                .collectList()
+                .map(books -> books.stream().findFirst()).subscribe();
 
         webTestClient.delete().uri("/gdn-bookstore-api/books/delete/{bookId}", book.getId())
                 .accept(MediaType.APPLICATION_JSON)
