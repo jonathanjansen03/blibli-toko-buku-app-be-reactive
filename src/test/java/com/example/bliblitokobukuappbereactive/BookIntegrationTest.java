@@ -35,14 +35,14 @@ public class BookIntegrationTest {
     private Book book;
 
     @BeforeEach
-    public void before(){
+    public void setup(){
         logger.info("Commence The Test !");
         book = createSingleDummyBook();
         bookRepository.save(book).subscribe();
     }
 
     @AfterEach
-    public void after() {
+    public void finisher() {
         logger.info("The Test Is Over !");
         bookRepository.deleteAll().subscribe();
     }
