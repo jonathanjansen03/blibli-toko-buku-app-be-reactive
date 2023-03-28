@@ -1,4 +1,4 @@
 package com.example.bliblitokobukuappbereactive;
 
-public class TransactionCRUDTest {
+public class BookIntegrationTest {
 }

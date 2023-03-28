@@ -1,11 +1,13 @@
 package com.example.bliblitokobukuappbereactive;
 
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.openMocks;
 
 import java.util.Collections;
 import java.util.Random;
-import java.util.concurrent.ExecutionException;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,7 +34,7 @@ import reactor.core.publisher.Mono;
 @ExtendWith(SpringExtension.class)
 @Slf4j
 @SpringBootTest(classes = BlibliTokoBukuAppBeReactiveApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class BookCRUDTest {
+public class BookUnitTest {
     @Autowired
     private WebTestClient webTestClient;
 
@@ -43,10 +45,13 @@ public class BookCRUDTest {
     BookService bookService;
     @InjectMocks
     BookController bookController;
-    private Logger logger = LoggerFactory.getLogger(BookCRUDTest.class);
+    private Logger logger = LoggerFactory.getLogger(BookUnitTest.class);
     private Faker faker = new Faker();
 
-//    @BeforeEach
+    @BeforeEach
+    public void before() {
+       openMocks(this);
+    }
 
     @Test
     public void getAllBookTest() {
@@ -99,7 +104,7 @@ public class BookCRUDTest {
         );
         newBook.setId("1");
 
-        when(bookController.updateBook( newBook, newBook.getId()))
+        when(bookService.updateBook( newBook.getId(), newBook))
                 .thenReturn(Mono.just(newBook));
 
         webTestClient.put().uri("/gdn-bookstore-api/books/update/{bookId}", newBook.getId())
@@ -124,7 +129,7 @@ public class BookCRUDTest {
         );
         newBook.setId("1");
 
-        when(bookController.updateBook( newBook, newBook.getId()))
+        when(bookService.updateBook(newBook.getId(), newBook))
                 .thenReturn(Mono.just(newBook));
 
         webTestClient.delete().uri("/gdn-bookstore-api/books/delete/{bookId}", newBook.getId())
@@ -138,7 +143,7 @@ public class BookCRUDTest {
 
 
     @Test
-    public void findBookTest() throws ExecutionException, InterruptedException {
+    public void findBookTest() {
         Random random = new Random();
         Book newBook = new Book(
                 faker.company().name(),
@@ -148,14 +153,14 @@ public class BookCRUDTest {
         );
         newBook.setId("1");
 
-        when(bookController.findBookById( newBook.getId()))
-                .thenReturn(Mono.just(newBook));
+        when(bookService.findBookById( anyString()))
+            .thenReturn(Mono.just(newBook));
 
-        webTestClient.get().uri("/gdn-bookstore-api/books/{bookId}", newBook.getId())
-                .accept(MediaType.APPLICATION_JSON)
+        webTestClient.get().uri("/gdn-bookstore-api/books/1")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
+                .jsonPath("$.title").isEqualTo(newBook.getTitle())
         ;
     }
 }
