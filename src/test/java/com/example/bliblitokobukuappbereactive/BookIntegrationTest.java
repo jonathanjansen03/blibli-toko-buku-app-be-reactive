@@ -14,7 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-import com.example.bliblitokobukuappbereactive.controllers.BookController;
 import com.example.bliblitokobukuappbereactive.models.Book;
 import com.example.bliblitokobukuappbereactive.repositories.BookRepository;
 import com.github.javafaker.Faker;
@@ -30,9 +29,6 @@ public class BookIntegrationTest {
 
     @Autowired
     private BookRepository bookRepository;
-
-    @Autowired
-    private BookController bookController;
 
     private final Logger logger = LoggerFactory.getLogger(BookUnitTest.class);
     private final Faker faker = new Faker();
