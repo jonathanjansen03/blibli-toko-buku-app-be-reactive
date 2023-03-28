@@ -1,10 +1,7 @@
 package com.example.bliblitokobukuappbereactive;
 
-import com.example.bliblitokobukuappbereactive.controllers.BookController;
-import com.example.bliblitokobukuappbereactive.models.Book;
-import com.example.bliblitokobukuappbereactive.repositories.BookRepository;
-import com.github.javafaker.Faker;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Random;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,9 +13,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.BodyInserters;
 
-import java.util.Random;
+import com.example.bliblitokobukuappbereactive.controllers.BookController;
+import com.example.bliblitokobukuappbereactive.models.Book;
+import com.example.bliblitokobukuappbereactive.repositories.BookRepository;
+import com.github.javafaker.Faker;
+
+import lombok.extern.slf4j.Slf4j;
 
 @ExtendWith(SpringExtension.class)
 @Slf4j
@@ -39,13 +40,14 @@ public class BookIntegrationTest {
 
     @BeforeEach
     public void before(){
-        System.out.println("Before Each Test");
+        logger.info("Commence The Test !");
         book = createSingleDummyBook();
         bookRepository.save(book).subscribe();
     }
 
     @AfterEach
     public void after() {
+        logger.info("The Test Is Over !");
         bookRepository.deleteAll().subscribe();
     }
 
