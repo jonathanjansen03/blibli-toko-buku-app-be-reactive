@@ -38,9 +38,6 @@ public class BookUnitTest {
     @Autowired
     private WebTestClient webTestClient;
 
-    @Autowired
-    private BookRepository bookRepository;
-
     @Mock
     BookService bookService;
     @InjectMocks
