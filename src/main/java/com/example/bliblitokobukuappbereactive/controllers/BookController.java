@@ -1,5 +1,6 @@
 package com.example.bliblitokobukuappbereactive.controllers;
 
+import com.example.bliblitokobukuappbereactive.models.AppServerResponse;
 import com.example.bliblitokobukuappbereactive.models.Book;
 import com.example.bliblitokobukuappbereactive.services.BookService;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,7 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @AllArgsConstructor
@@ -21,17 +23,29 @@ public class BookController {
     private BookService bookService;
 
     @GetMapping()
-    public Flux<Book> getBooks(
+    public Mono<AppServerResponse> getBooks
+    (
             @RequestParam(required = false) String title,
-            @RequestParam(required = false, defaultValue = "0") long page,
+            @RequestParam(required = false, defaultValue = "1") long page,
             @RequestParam(required = false, defaultValue = "25") long size
     )
+            throws ExecutionException, InterruptedException
     {
-        return bookService
-                .getBooks(title)
-                .subscribeOn(Schedulers.boundedElastic())
+        Flux<Book> bookFlux = bookService
+                            .getBooks(title)
+                            .subscribeOn(Schedulers.boundedElastic());
+
+        long documentCount = bookFlux.count().toFuture().get();
+
+
+        List<Book> bookList = bookFlux
                 .skip((page-1) * size)
-                .take(size);
+                .take(size)
+                .collectList()
+                .toFuture()
+                .get();
+
+        return Mono.just(new AppServerResponse(documentCount, bookList));
     }
 
     @GetMapping(path = "/{bookId}")
