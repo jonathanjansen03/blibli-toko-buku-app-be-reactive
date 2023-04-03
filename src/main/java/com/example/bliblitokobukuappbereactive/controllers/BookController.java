@@ -21,9 +21,17 @@ public class BookController {
     private BookService bookService;
 
     @GetMapping()
-    public Flux<Book> getBooks(@RequestParam(required = false) String title)
+    public Flux<Book> getBooks(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false, defaultValue = "0") long page,
+            @RequestParam(required = false, defaultValue = "25") long size
+    )
     {
-        return bookService.getBooks(title).subscribeOn(Schedulers.boundedElastic());
+        return bookService
+                .getBooks(title)
+                .subscribeOn(Schedulers.boundedElastic())
+                .skip((page-1) * size)
+                .take(size);
     }
 
     @GetMapping(path = "/{bookId}")
