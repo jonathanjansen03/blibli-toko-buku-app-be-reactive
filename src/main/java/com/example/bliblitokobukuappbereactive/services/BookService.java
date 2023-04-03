@@ -116,6 +116,7 @@ public class BookService {
                     foundBook.setAuthor(book.getAuthor());
                     foundBook.setStock(book.getStock());
                     foundBook.setPrice(book.getPrice());
+                    foundBook.setDiscount(book.getDiscount());
                     return bookRepository.save(foundBook);
                 })
                 .flatMap(bookMono -> bookMono)
