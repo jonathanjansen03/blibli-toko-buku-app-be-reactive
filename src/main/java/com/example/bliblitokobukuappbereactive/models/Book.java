@@ -34,4 +34,12 @@ public class Book {
         this.stock = stock;
         this.price = price;
     }
+
+    public Book(String title, String author, int stock, double price, double discount) {
+        this.title = title;
+        this.author = author;
+        this.stock = stock;
+        this.price = price;
+        this.discount = discount;
+    }
 }

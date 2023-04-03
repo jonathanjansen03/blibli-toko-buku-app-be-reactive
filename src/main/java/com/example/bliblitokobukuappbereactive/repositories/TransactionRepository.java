@@ -12,13 +12,13 @@ import java.util.List;
 public interface TransactionRepository extends ReactiveMongoRepository<Transaction, String> {
     @Query(
             "{" +
-                    "'$expr' : {" +
+                "'$expr' : {" +
                     "'$and': [" +
-                    "{'$eq': [{ '$month': '$purchasedAt' }, ?0]}," +
-                    "{'$eq': [{ '$year': '$purchasedAt' }, ?1]}" +
+                        "{'$eq': [{ '$month': '$purchasedAt' }, ?0]}," +
+                        "{'$eq': [{ '$year': '$purchasedAt' }, ?1]}" +
                     "]" +
-                    "}" +
-                    "}"
+                "}" +
+            "}"
     )
     Flux<Transaction> getMonthlyReport(int month, int year);
 }

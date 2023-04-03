@@ -46,15 +46,14 @@ public class BookCRUDTest {
     private Logger logger = LoggerFactory.getLogger(BookCRUDTest.class);
     private Faker faker = new Faker();
 
-//    @BeforeEach
 
     @Test
-    public void getAllBookTest() {
+    public void getAllBookTest() throws ExecutionException, InterruptedException {
 //        List<Book> books = bookController.getAllBook();
 //        for (Book book : books) {
 //            logger.info(book.getTitle());
 //        }
-        when(bookService.getAllBook())
+        when(bookService.getBooks(null))
                 .thenReturn(Flux.fromIterable(Collections.emptyList()));
 
 
@@ -157,5 +156,13 @@ public class BookCRUDTest {
                 .expectStatus().isOk()
                 .expectBody()
         ;
+    }
+
+
+    @Test
+    public void findBookByTitle() throws ExecutionException, InterruptedException {
+        String title = "";
+        when(bookController.getBooks(title))
+                .thenReturn()
     }
 }

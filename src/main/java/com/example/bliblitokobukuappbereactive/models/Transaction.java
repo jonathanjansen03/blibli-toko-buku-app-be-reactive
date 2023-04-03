@@ -22,9 +22,7 @@ public class Transaction {
     @Version
     private int version;
 
-    @DocumentReference(collection = "books")
     private Book book;
-
     private int qty;
     private LocalDateTime purchasedAt = LocalDateTime.now(ZoneId.of("Etc/GMT+7"));
 

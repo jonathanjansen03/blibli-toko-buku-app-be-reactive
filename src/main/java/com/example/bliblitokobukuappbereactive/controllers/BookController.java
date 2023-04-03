@@ -7,8 +7,9 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
-import java.util.List;
+
 import java.util.concurrent.ExecutionException;
 
 @AllArgsConstructor
@@ -16,36 +17,46 @@ import java.util.concurrent.ExecutionException;
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/gdn-bookstore-api/books")
 public class BookController {
+
     private BookService bookService;
-    @GetMapping
-    public List<Book> getAllBook() throws ExecutionException, InterruptedException {
-        return bookService.getAllBook().collectList().toFuture().get();
+
+    @GetMapping()
+    public Flux<Book> getBooks(@RequestParam(required = false) String title)
+    {
+        return bookService.getBooks(title).subscribeOn(Schedulers.boundedElastic());
     }
-    @PostMapping(
-            path = "/insert",
-            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
-            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
-    )
-    public Mono<Book> insertBook(@RequestBody Book book) {
-        return bookService.insertBook(book);
-    }
-    @PutMapping(
-            path = "/update/{bookId}",
-            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
-            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
-    )
-    public Mono<Book> updateBook(@RequestBody Book book, @PathVariable("bookId") String id) {
-        return bookService.updateBook(id, book);
-    }
-    @GetMapping(
-            path = "/{bookId}"
-    )
-    public Mono<Book> findBookById(@PathVariable("bookId") final String bookId) {
+
+    @GetMapping(path = "/{bookId}")
+    public Mono<Book> findBookById(@PathVariable("bookId") String bookId)
+    {
         return bookService.findBookById(bookId);
     }
 
+    @PostMapping
+    (
+        path = "/insert",
+        consumes = {MediaType.APPLICATION_JSON_VALUE},
+        produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    public Mono<Book> insertBook(@RequestBody Book book)
+    {
+        return bookService.insertBook(book);
+    }
+
+    @PutMapping
+    (
+        path = "/update/{bookId}",
+        consumes = {MediaType.APPLICATION_JSON_VALUE},
+        produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    public Mono<Book> updateBook(@RequestBody Book book, @PathVariable("bookId") String id)
+    {
+        return bookService.updateBook(id, book);
+    }
+
     @DeleteMapping(path = "/delete/{bookId}")
-    public Mono<Void> deleteBook(@PathVariable("bookId") String id){
+    public Mono<Void> deleteBook(@PathVariable("bookId") String id)
+    {
         return bookService.deleteBook(id);
     }
 
