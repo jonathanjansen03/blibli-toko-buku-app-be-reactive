@@ -26,7 +26,7 @@ public class Book {
     private String author;
     private int stock;
     private double price;
-    private double discount = 1;
+    private double discount = 0;
 
     public Book(String title, String author, int stock, double price) {
         this.title = title;
