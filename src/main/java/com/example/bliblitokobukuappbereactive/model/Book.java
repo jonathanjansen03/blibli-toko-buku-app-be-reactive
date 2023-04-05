@@ -30,6 +30,12 @@ public class Book {
     private double discount;
 
 
+    public Book (String title, String author, int stock, double price){
+        this.title = title;
+        this.author = author;
+        this.stock = stock;
+        this.price = price;
+    }
     public Book (String title, String author, int stock, double price, double discount){
         this.title = title;
         this.author = author;

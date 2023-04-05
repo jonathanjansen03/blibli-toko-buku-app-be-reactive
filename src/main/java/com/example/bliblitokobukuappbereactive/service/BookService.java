@@ -18,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @Component
@@ -121,5 +122,9 @@ public class BookService {
     public Mono<Void> deleteBook(final String id)
     {
         return bookRepository.deleteById(id);
+    }
+
+    public Mono<Book> findBookById(final String id) {
+        return bookRepository.findById(id);
     }
 }

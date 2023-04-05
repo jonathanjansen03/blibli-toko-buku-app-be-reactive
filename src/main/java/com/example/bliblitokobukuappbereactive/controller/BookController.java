@@ -77,4 +77,10 @@ public class BookController {
         return bookService.deleteBook(id);
     }
 
+    @GetMapping(
+            path = "/{bookId}"
+    )
+    public Mono<Book> findBookById(@PathVariable("bookId") String id) {
+        return bookService.findBookById(id);
+    }
 }
