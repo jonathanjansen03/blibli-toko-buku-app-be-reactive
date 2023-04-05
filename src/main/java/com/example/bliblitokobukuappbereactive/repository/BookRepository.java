@@ -1,6 +1,6 @@
-package com.example.bliblitokobukuappbereactive.repositories;
+package com.example.bliblitokobukuappbereactive.repository;
 
-import com.example.bliblitokobukuappbereactive.models.Book;
+import com.example.bliblitokobukuappbereactive.model.Book;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,9 +1,10 @@
-package com.example.bliblitokobukuappbereactive.services;
+package com.example.bliblitokobukuappbereactive.service;
 
-import com.example.bliblitokobukuappbereactive.dtos.OpenLibraryBook;
-import com.example.bliblitokobukuappbereactive.dtos.OpenLibraryResponse;
-import com.example.bliblitokobukuappbereactive.models.Book;
-import com.example.bliblitokobukuappbereactive.repositories.BookRepository;
+import com.example.bliblitokobukuappbereactive.dto.BookDTO;
+import com.example.bliblitokobukuappbereactive.dto.openlibrary.OpenLibraryBook;
+import com.example.bliblitokobukuappbereactive.dto.openlibrary.OpenLibraryResponse;
+import com.example.bliblitokobukuappbereactive.model.Book;
+import com.example.bliblitokobukuappbereactive.repository.BookRepository;
 import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
@@ -17,7 +18,6 @@ import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import java.util.Random;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @Component
@@ -78,7 +78,7 @@ public class BookService {
         int newBookStock = new Random().ints(1, 100).findFirst().getAsInt();
         int newBookPrice = new Random().ints(40, 200).findFirst().getAsInt() * 1000;
 
-        return new Book(newBookTitle, newBookAuthor, newBookStock, newBookPrice);
+        return new Book(newBookTitle, newBookAuthor, newBookStock, newBookPrice, 0);
     }
 
     public Flux<Book> getBooks(String title)
@@ -102,9 +102,9 @@ public class BookService {
         return bookRepository.findById(id);
     }
 
-    public Mono<Book> insertBook(Book book)
+    public Mono<Book> insertBook(BookDTO bookDTO)
     {
-        return bookRepository.save(book);
+        return bookRepository.save(Book.build(bookDTO));
     }
 
     public Mono<Book> updateBook(final String id, final Book book)

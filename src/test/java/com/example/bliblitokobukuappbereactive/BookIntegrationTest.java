@@ -14,8 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-import com.example.bliblitokobukuappbereactive.models.Book;
-import com.example.bliblitokobukuappbereactive.repositories.BookRepository;
+import com.example.bliblitokobukuappbereactive.model.Book;
+import com.example.bliblitokobukuappbereactive.repository.BookRepository;
 import com.github.javafaker.Faker;
 
 import lombok.extern.slf4j.Slf4j;

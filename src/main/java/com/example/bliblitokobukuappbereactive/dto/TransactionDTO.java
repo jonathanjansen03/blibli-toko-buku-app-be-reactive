@@ -1,4 +1,4 @@
-package com.example.bliblitokobukuappbereactive.dtos;
+package com.example.bliblitokobukuappbereactive.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

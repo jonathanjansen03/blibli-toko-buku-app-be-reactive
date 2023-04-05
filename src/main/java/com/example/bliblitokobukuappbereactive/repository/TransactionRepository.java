@@ -1,12 +1,10 @@
-package com.example.bliblitokobukuappbereactive.repositories;
+package com.example.bliblitokobukuappbereactive.repository;
 
-import com.example.bliblitokobukuappbereactive.models.Transaction;
+import com.example.bliblitokobukuappbereactive.model.Transaction;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
-
-import java.util.List;
 
 @Repository
 public interface TransactionRepository extends ReactiveMongoRepository<Transaction, String> {

@@ -1,4 +1,4 @@
-package com.example.bliblitokobukuappbereactive.configurations;
+package com.example.bliblitokobukuappbereactive.configuration;
 
 import com.mongodb.reactivestreams.client.MongoClient;
 import org.springframework.beans.factory.annotation.Autowired;

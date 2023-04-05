@@ -1,8 +1,8 @@
-package com.example.bliblitokobukuappbereactive.controllers;
+package com.example.bliblitokobukuappbereactive.controller;
 
-import com.example.bliblitokobukuappbereactive.dtos.TransactionDTO;
-import com.example.bliblitokobukuappbereactive.models.Transaction;
-import com.example.bliblitokobukuappbereactive.services.TransactionService;
+import com.example.bliblitokobukuappbereactive.dto.TransactionDTO;
+import com.example.bliblitokobukuappbereactive.model.Transaction;
+import com.example.bliblitokobukuappbereactive.service.TransactionService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;

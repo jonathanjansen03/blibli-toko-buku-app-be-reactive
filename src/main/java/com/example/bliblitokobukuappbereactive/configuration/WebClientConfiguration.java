@@ -1,4 +1,4 @@
-package com.example.bliblitokobukuappbereactive.configurations;
+package com.example.bliblitokobukuappbereactive.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
