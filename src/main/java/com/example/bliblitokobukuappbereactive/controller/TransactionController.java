@@ -24,12 +24,6 @@ public class TransactionController {
         return transactionService.getAllTransaction();
     }
 
-    @GetMapping(path = "/{transactionId}")
-    public Mono<Transaction> getTransactionById(@PathVariable String transactionId)
-    {
-        return transactionService.getTransactionById(transactionId);
-    }
-
     @GetMapping("/report")
     public Flux<Transaction> getMonthlyReport(@RequestParam int month, @RequestParam int year)
     {

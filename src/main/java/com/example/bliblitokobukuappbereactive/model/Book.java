@@ -29,6 +29,7 @@ public class Book {
     private double price;
     private double discount;
 
+
     public Book (String title, String author, int stock, double price, double discount){
         this.title = title;
         this.author = author;

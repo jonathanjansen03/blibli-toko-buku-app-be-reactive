@@ -27,11 +27,6 @@ public class TransactionService {
         return transactionRepository.findAll();
     }
 
-    public Mono<Transaction> getTransactionById(final String id)
-    {
-        return transactionRepository.findById(id);
-    }
-
     public Flux<Transaction> getMonthlyReport(int month, int year)
     {
         return transactionRepository.getMonthlyReport(month, year);
@@ -40,7 +35,16 @@ public class TransactionService {
     public Mono<Transaction> insertTransaction(TransactionDTO transactionDTO)
             throws ExecutionException, InterruptedException
     {
-        Book book = bookRepository.findById(transactionDTO.getBookId()).toFuture().get();
+        Book book = bookRepository
+                .findById(transactionDTO.getBookId())
+                .toFuture().get();
+
+        if(book == null){
+            return Mono.error(new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Book was not found"
+            ));
+        }
 
         if(book.getStock() < transactionDTO.getQty()){
             return Mono.error(new ResponseStatusException(
@@ -52,9 +56,9 @@ public class TransactionService {
         book.setStock(book.getStock() - transactionDTO.getQty());
         bookRepository.save(book).subscribe();
 
-        Transaction newTransaction = new Transaction(book, transactionDTO.getQty());
-
-        return transactionRepository.save(newTransaction);
+        return transactionRepository.save(
+                new Transaction(book, transactionDTO.getQty())
+        );
     }
 
     public Mono<Void> deleteTransaction(final String id)

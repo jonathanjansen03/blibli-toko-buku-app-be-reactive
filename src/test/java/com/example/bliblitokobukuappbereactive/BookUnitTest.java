@@ -6,6 +6,7 @@ import static org.mockito.MockitoAnnotations.openMocks;
 
 import java.util.Collections;
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,8 +42,8 @@ public class BookUnitTest {
     BookService bookService;
     @InjectMocks
     BookController bookController;
-    private Logger logger = LoggerFactory.getLogger(BookUnitTest.class);
-    private Faker faker = new Faker();
+    private final Logger logger = LoggerFactory.getLogger(BookUnitTest.class);
+    private final Faker faker = new Faker();
 
 
     @BeforeEach
@@ -159,7 +160,7 @@ public class BookUnitTest {
 
 
     @Test
-    public void findBookByTitle() throws  InterruptedException {
+    public void findBookByTitle() throws InterruptedException, ExecutionException {
         String title = "";
         when(bookController.getBooks(title, 1, 25))
                 .thenReturn(bookController.getBooks(title, 1, 25));

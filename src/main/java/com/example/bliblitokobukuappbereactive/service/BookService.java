@@ -97,11 +97,6 @@ public class BookService {
         return bookRepository.findAll();
     }
 
-    public Mono<Book> findBookById(String id)
-    {
-        return bookRepository.findById(id);
-    }
-
     public Mono<Book> insertBook(BookDTO bookDTO)
     {
         return bookRepository.save(Book.build(bookDTO));
@@ -116,6 +111,7 @@ public class BookService {
                     foundBook.setAuthor(book.getAuthor());
                     foundBook.setStock(book.getStock());
                     foundBook.setPrice(book.getPrice());
+                    foundBook.setDiscount(book.getDiscount());
                     return bookRepository.save(foundBook);
                 })
                 .flatMap(bookMono -> bookMono)

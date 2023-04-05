@@ -49,12 +49,6 @@ public class BookController {
         return Mono.just(new GetBookWebResponse(documentCount, bookList));
     }
 
-    @GetMapping(path = "/{bookId}")
-    public Mono<Book> findBookById(@PathVariable("bookId") String bookId)
-    {
-        return bookService.findBookById(bookId);
-    }
-
     @PostMapping
     (
         path = "/insert",

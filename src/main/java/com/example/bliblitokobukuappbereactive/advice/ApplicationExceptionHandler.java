@@ -1,4 +1,4 @@
-package com.example.bliblitokobukuappbereactive.controller;
+package com.example.bliblitokobukuappbereactive.advice;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
