@@ -53,7 +53,7 @@ public class BookUnitTest {
 
 
     @Test
-    public void getAllBookTest() throws  InterruptedException {
+    public void getAllBookTest() {
 
         when(bookService.getBooks(null))
                 .thenReturn(Flux.fromIterable(Collections.emptyList()));
