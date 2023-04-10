@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
+import com.example.bliblitokobukuappbereactive.dto.embedded.GetBookWebResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,11 +52,11 @@ public class BookUnitTest {
 
 
     @Test
-    public void getAllBookTest() {
+    public void getAllBookTest() throws ExecutionException, InterruptedException {
 
 
-        when(bookService.getBooks(null))
-                .thenReturn(Flux.fromIterable(Collections.emptyList()));
+        when(bookService.getBooks(null, 1, 1))
+                .thenReturn(Mono.just(new GetBookWebResponse()));
 
 
         webTestClient.get().uri("/gdn-bookstore-api/books/")

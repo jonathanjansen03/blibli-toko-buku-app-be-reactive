@@ -29,24 +29,14 @@ public class BookController {
             @RequestParam(required = false) String title,
             @RequestParam(required = false, defaultValue = "1") long page,
             @RequestParam(required = false, defaultValue = "25") long size
-    )
-            throws ExecutionException, InterruptedException
-    {
-        Flux<Book> bookFlux = bookService
-                            .getBooks(title)
-                            .subscribeOn(Schedulers.boundedElastic());
-
-        long documentCount = bookFlux.count().toFuture().get();
-
-
-        List<Book> bookList = bookFlux
-                .skip((page-1) * size)
-                .take(size)
-                .collectList()
-                .toFuture()
-                .get();
-
-        return Mono.just(new GetBookWebResponse(documentCount, bookList));
+    ) {
+        try {
+            return bookService.getBooks(title, page, size);
+        }
+        catch (ExecutionException | InterruptedException e) {
+            System.out.println("Error : " + e);
+        }
+        return null;
     }
 
     @PostMapping
