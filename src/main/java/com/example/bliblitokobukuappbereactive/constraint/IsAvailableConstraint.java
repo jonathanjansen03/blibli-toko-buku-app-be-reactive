@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface IsAvailableConstraint {
-    String message() default "The object you are looking for is not present";
+    String message() default "The book you are looking for is not present";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

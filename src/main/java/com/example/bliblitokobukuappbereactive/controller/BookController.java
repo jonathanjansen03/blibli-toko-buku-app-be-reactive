@@ -45,7 +45,7 @@ public class BookController {
         consumes = {MediaType.APPLICATION_JSON_VALUE},
         produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    public Mono<Book> insertBook(@RequestBody @Valid BookDTO bookDTO)
+    public Mono<Book> insertBook(@Valid @RequestBody BookDTO bookDTO)
     {
         return bookService.insertBook(bookDTO);
     }
@@ -56,9 +56,9 @@ public class BookController {
         consumes = {MediaType.APPLICATION_JSON_VALUE},
         produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    public Mono<Book> updateBook(@RequestBody Book book, @PathVariable("bookId") String id)
+    public Mono<Book> updateBook(@Valid @RequestBody BookDTO bookDTO, @PathVariable("bookId") String id)
     {
-        return bookService.updateBook(id, book);
+        return bookService.updateBook(id, bookDTO);
     }
 
     @DeleteMapping(path = "/delete/{bookId}")

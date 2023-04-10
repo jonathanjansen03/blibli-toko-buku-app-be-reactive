@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import javax.validation.Valid;
 import java.util.concurrent.ExecutionException;
 
 @AllArgsConstructor
@@ -36,7 +37,7 @@ public class TransactionController {
         consumes = {MediaType.APPLICATION_JSON_VALUE},
         produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    public Mono<Transaction> insertTransaction(@RequestBody TransactionDTO transactionDTO)
+    public Mono<Transaction> insertTransaction(@Valid @RequestBody TransactionDTO transactionDTO)
             throws ExecutionException, InterruptedException
     {
         return transactionService.insertTransaction(transactionDTO);

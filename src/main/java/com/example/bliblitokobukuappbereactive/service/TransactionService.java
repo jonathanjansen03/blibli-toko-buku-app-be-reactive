@@ -35,30 +35,24 @@ public class TransactionService {
     public Mono<Transaction> insertTransaction(TransactionDTO transactionDTO)
             throws ExecutionException, InterruptedException
     {
-        Book book = bookRepository
+        return bookRepository
                 .findById(transactionDTO.getBookId())
-                .toFuture().get();
-
-        if(book == null){
-            return Mono.error(new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Book was not found"
-            ));
-        }
-
-        if(book.getStock() < transactionDTO.getQty()){
-            return Mono.error(new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Purchase quantity must not be more than Book's stock"
-            ));
-        }
-
-        book.setStock(book.getStock() - transactionDTO.getQty());
-        bookRepository.save(book).subscribe();
-
-        return transactionRepository.save(
-                new Transaction(book, transactionDTO.getQty())
-        );
+                .switchIfEmpty(
+                        Mono.error(
+                                new ResponseStatusException(
+                                        HttpStatus.BAD_REQUEST,
+                                        "Book was not found"
+                                )))
+                .filter(retrievedBook -> retrievedBook.getStock() >= transactionDTO.getQty())
+                .switchIfEmpty(
+                        Mono.error(
+                                new ResponseStatusException(
+                                        HttpStatus.BAD_REQUEST,
+                                        "Purchase quantity must not exceed Book's stock"
+                                )))
+                .doOnSuccess(retrievedBook -> retrievedBook.setStock(retrievedBook.getStock() - transactionDTO.getQty()))
+                .flatMap(retrievedBook -> bookRepository.save(retrievedBook))
+                .flatMap(retrievedBook -> transactionRepository.save(new Transaction(retrievedBook, transactionDTO.getQty())));
     }
 
     public Mono<Void> deleteTransaction(final String id)
