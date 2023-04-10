@@ -15,7 +15,7 @@ public class ApplicationExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({WebExchangeBindException.class})
-    public Map<String, String> invalidArgumentHandler
+    public Map<String, String> WebExchangeBindHandler
         (WebExchangeBindException ex)
     {
         Map<String, String> errorMessage = new HashMap<>();

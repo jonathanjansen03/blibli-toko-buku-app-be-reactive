@@ -1,6 +1,7 @@
 package com.example.bliblitokobukuappbereactive.model;
 
 import com.example.bliblitokobukuappbereactive.dto.BookDTO;
+import com.example.bliblitokobukuappbereactive.model.metadata.AuditMetadata;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Data;
@@ -13,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @Data
 @Document(collection = "books")
-public class Book {
+public class Book extends AuditMetadata {
 
     public static final String COLLECTION_NAME = "books";
 

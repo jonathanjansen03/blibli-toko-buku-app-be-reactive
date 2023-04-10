@@ -103,20 +103,26 @@ public class BookService {
         return bookRepository.save(Book.build(bookDTO));
     }
 
-    public Mono<Book> updateBook(final String id, final Book book)
+    public Mono<Book> updateBook(final String id, final BookDTO bookDTO)
     {
         return bookRepository
                 .findById(id)
-                .map(foundBook -> {
-                    foundBook.setTitle(book.getTitle());
-                    foundBook.setAuthor(book.getAuthor());
-                    foundBook.setStock(book.getStock());
-                    foundBook.setPrice(book.getPrice());
-                    foundBook.setDiscount(book.getDiscount());
+                .flatMap(foundBook -> {
+                    foundBook.setTitle(bookDTO.getTitle());
+                    foundBook.setAuthor(bookDTO.getAuthor());
+                    foundBook.setStock(bookDTO.getStock());
+                    foundBook.setPrice(bookDTO.getPrice());
+                    foundBook.setDiscount(bookDTO.getDiscount());
                     return bookRepository.save(foundBook);
                 })
-                .flatMap(bookMono -> bookMono)
-                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Book was not found")));
+                .switchIfEmpty(
+                        Mono.error(
+                                new ResponseStatusException(
+                                        HttpStatus.BAD_REQUEST,
+                                        "Book was not found"
+                                )
+                        )
+                );
     }
 
     public Mono<Void> deleteBook(final String id)
