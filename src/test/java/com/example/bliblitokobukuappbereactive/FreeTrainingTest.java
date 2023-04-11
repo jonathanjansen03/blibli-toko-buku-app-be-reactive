@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
 
 @Slf4j
 public class FreeTrainingTest {
@@ -41,5 +42,12 @@ public class FreeTrainingTest {
                 .collect(Collectors.toList());
 
     log.info("The Structure after flattening is : " + listInts);
+  }
+
+  @Test
+  public void testFluxMap() {
+    Flux.fromArray(new String[]{"Tom", "Melissa", "Steve", "Megan"})
+            .map(String::toUpperCase)
+            .subscribe(System.out::println);
   }
 }

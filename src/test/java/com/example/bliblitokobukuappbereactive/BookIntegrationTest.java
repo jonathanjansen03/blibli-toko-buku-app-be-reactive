@@ -20,7 +20,6 @@ import com.example.bliblitokobukuappbereactive.repository.BookRepository;
 import com.github.javafaker.Faker;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.Assert;
 
 @ExtendWith(SpringExtension.class)
 @Slf4j
@@ -73,7 +72,7 @@ public class BookIntegrationTest {
     }
     @Test
     public void insertSingleBookTest() {
-        Assertions.assertNull(bookRepository.findById("").block());
+        Assertions.assertNull(bookRepository.findAll().count().block());
 
         webTestClient.post().uri("/gdn-bookstore-api/books/insert")
                 .contentType(MediaType.APPLICATION_JSON)
