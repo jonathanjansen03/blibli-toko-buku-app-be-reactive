@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 
 @Configuration
-public class ReactiveMongoConfig {
+public class ReactiveMongoConfiguration {
 
     @Autowired
     MongoClient mongoClient;

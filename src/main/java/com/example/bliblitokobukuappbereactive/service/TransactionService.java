@@ -1,7 +1,6 @@
 package com.example.bliblitokobukuappbereactive.service;
 
 import com.example.bliblitokobukuappbereactive.dto.TransactionDTO;
-import com.example.bliblitokobukuappbereactive.model.Book;
 import com.example.bliblitokobukuappbereactive.model.Transaction;
 import com.example.bliblitokobukuappbereactive.repository.BookRepository;
 import com.example.bliblitokobukuappbereactive.repository.TransactionRepository;
@@ -37,19 +36,15 @@ public class TransactionService {
     {
         return bookRepository
                 .findById(transactionDTO.getBookId())
-                .switchIfEmpty(
-                        Mono.error(
-                                new ResponseStatusException(
-                                        HttpStatus.BAD_REQUEST,
-                                        "Book was not found"
-                                )))
                 .filter(retrievedBook -> retrievedBook.getStock() >= transactionDTO.getQty())
                 .switchIfEmpty(
-                        Mono.error(
-                                new ResponseStatusException(
-                                        HttpStatus.BAD_REQUEST,
-                                        "Purchase quantity must not exceed Book's stock"
-                                )))
+                    Mono.error(
+                        new ResponseStatusException(
+                            HttpStatus.BAD_REQUEST,
+                            "Purchase quantity must not exceed book's stock"
+                        )
+                    )
+                )
                 .doOnSuccess(retrievedBook -> retrievedBook.setStock(retrievedBook.getStock() - transactionDTO.getQty()))
                 .flatMap(retrievedBook -> bookRepository.save(retrievedBook))
                 .flatMap(retrievedBook -> transactionRepository.save(new Transaction(retrievedBook, transactionDTO.getQty())));
@@ -59,4 +54,5 @@ public class TransactionService {
     {
         return transactionRepository.deleteById(id);
     }
+
 }

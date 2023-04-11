@@ -1,9 +1,8 @@
 package com.example.bliblitokobukuappbereactive.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.Data;
-
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
@@ -23,7 +22,7 @@ public class BookDTO {
     @Range(min = 0, message = "Stock must be greater than or equals to 0")
     private int stock;
 
-    @Range(min = 35000, message = "Price must be greater than 35000")
+    @Range(min = 35000, message = "Price must be greater than or equals to 35000")
     private double price;
 
     @Range(min = 0, max = 1, message = "Discount value must be between 0-1")

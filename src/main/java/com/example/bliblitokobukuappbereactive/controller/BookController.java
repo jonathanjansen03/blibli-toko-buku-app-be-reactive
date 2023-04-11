@@ -6,7 +6,16 @@ import com.example.bliblitokobukuappbereactive.model.Book;
 import com.example.bliblitokobukuappbereactive.service.BookService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
@@ -26,21 +35,21 @@ public class BookController {
     @GetMapping()
     public Mono<GetBookWebResponse> getBooks
     (
-            @RequestParam(required = false) String title,
-            @RequestParam(required = false, defaultValue = "1") long page,
-            @RequestParam(required = false, defaultValue = "25") long size
+        @RequestParam(required = false) String title,
+        @RequestParam(required = false, defaultValue = "1") long page,
+        @RequestParam(required = false, defaultValue = "25") long size
     )
-            throws ExecutionException, InterruptedException
+        throws ExecutionException, InterruptedException
     {
         Flux<Book> bookFlux = bookService
                             .getBooks(title)
                             .subscribeOn(Schedulers.boundedElastic());
 
+
         long documentCount = bookFlux.count().toFuture().get();
 
-
         List<Book> bookList = bookFlux
-                .skip((page-1) * size)
+                .skip((page - 1) * size)
                 .take(size)
                 .collectList()
                 .toFuture()
@@ -77,9 +86,7 @@ public class BookController {
         return bookService.deleteBook(id);
     }
 
-    @GetMapping(
-            path = "/{bookId}"
-    )
+    @GetMapping(path = "/{bookId}")
     public Mono<Book> findBookById(@PathVariable("bookId") String id) {
         return bookService.findBookById(id);
     }
