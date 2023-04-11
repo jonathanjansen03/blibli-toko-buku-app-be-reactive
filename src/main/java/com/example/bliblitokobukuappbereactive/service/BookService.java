@@ -1,6 +1,7 @@
 package com.example.bliblitokobukuappbereactive.service;
 
 import com.example.bliblitokobukuappbereactive.dto.BookDTO;
+import com.example.bliblitokobukuappbereactive.dto.embedded.GetBookWebResponse;
 import com.example.bliblitokobukuappbereactive.dto.openlibrary.OpenLibraryResponse;
 import com.example.bliblitokobukuappbereactive.model.Book;
 import com.example.bliblitokobukuappbereactive.repository.BookRepository;
@@ -16,6 +17,9 @@ import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @Component
@@ -32,47 +36,61 @@ public class BookService {
     private WebClient webClient;
 
 
-    public Flux<Book> consumeAndSave(String title)
-    {
+    public Flux<Book> consumeAndSave(String title) {
         title = title.replace(" ", "+").toLowerCase();
 
         Mono<OpenLibraryResponse> responseMono = webClient
                 .get()
                 .uri(BASE_URL + title + QUERY_LIMIT)
                 .exchangeToMono(response -> {
-                    if(response.statusCode().equals(HttpStatus.OK))
+                    if (response.statusCode().equals(HttpStatus.OK))
                         return response.bodyToMono(OpenLibraryResponse.class);
-                    else if(response.statusCode().is4xxClientError())
+                    else if (response.statusCode().is4xxClientError())
                         return Mono.empty();
                     else
-                       return response.createException().flatMap(Mono::error);
+                        return response.createException().flatMap(Mono::error);
                 });
 
         return responseMono
-                .map( response ->
+                .map(response ->
                         response
-                        .getDocs()
-                        .stream()
-                        .map(Book::build)
-                        .collect(Collectors.toList())
+                                .getDocs()
+                                .stream()
+                                .map(Book::build)
+                                .collect(Collectors.toList())
                 )
                 .flatMapMany(books -> bookRepository.saveAll(books));
     }
 
-    public Flux<Book> getBooks(String title)
-    {
+
+    public Mono<GetBookWebResponse> getBooks(String title, long page, long size) throws ExecutionException, InterruptedException {
+
+        Flux<Book> bookFlux;
+
         if(title != null && title.trim().length() > 0)
         {
             Query query = new Query()
                                 .addCriteria(Criteria.where("title")
                                 .regex("\\s*" + title, "i"));
 
-            return reactiveMongoTemplate
+            bookFlux =  reactiveMongoTemplate
                     .find(query, Book.class, "books")
                     .switchIfEmpty(consumeAndSave(title));
         }
+        else {
+            bookFlux = bookRepository.findAll();
+        }
 
-        return bookRepository.findAll();
+        long documentCount = bookFlux.count().toFuture().get();
+
+        List<Book> bookList = bookFlux
+                .skip((page-1) * size)
+                .take(size)
+                .collectList()
+                .toFuture()
+                .get();
+
+        return Mono.just(new GetBookWebResponse(documentCount, bookList));
     }
 
     public Mono<Book> insertBook(BookDTO bookDTO)
