@@ -4,11 +4,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 
-import java.util.Collections;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
-import com.example.bliblitokobukuappbereactive.dto.embedded.GetBookWebResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,12 +20,12 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
 import com.example.bliblitokobukuappbereactive.controller.BookController;
+import com.example.bliblitokobukuappbereactive.dto.embedded.GetBookWebResponse;
 import com.example.bliblitokobukuappbereactive.model.Book;
 import com.example.bliblitokobukuappbereactive.service.BookService;
 import com.github.javafaker.Faker;
 
 import lombok.extern.slf4j.Slf4j;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @ExtendWith(SpringExtension.class)
@@ -99,8 +97,8 @@ public class BookUnitTest {
         );
         newBook.setId("1");
 
-        when(bookService.updateBook( newBook.getId(), newBook))
-                .thenReturn(Mono.just(newBook));
+//        when(bookService.updateBook( newBook.getId(), newBook))
+//                .thenReturn(Mono.just(newBook));
 
         webTestClient.put().uri("/gdn-bookstore-api/books/update/{bookId}", newBook.getId())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -124,8 +122,8 @@ public class BookUnitTest {
         );
         newBook.setId("1");
 
-        when(bookService.updateBook(newBook.getId(), newBook))
-                .thenReturn(Mono.just(newBook));
+//        when(bookService.updateBook(newBook.getId(), newBook))
+//                .thenReturn(Mono.just(newBook));
 
         webTestClient.delete().uri("/gdn-bookstore-api/books/delete/{bookId}", newBook.getId())
                 .accept(MediaType.APPLICATION_JSON)
