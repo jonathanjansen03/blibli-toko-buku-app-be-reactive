@@ -23,13 +23,13 @@ public class BookDTO {
   @Size(max = 100, message = "Author must not be more than {max} characters.")
   private String author;
 
-  @Range(min = 0, max = 100, message = "Stock must be between {min} and {max}.")
+  @Range(min = 0, max = 100, message = "Stock must be between {min} and {max} (inclusive).")
   private int stock;
 
-  @Range(min = 1000, max = 1000000, message = "Price must be between IDR {min} and {max}.")
+  @Range(min = 1000, max = 1000000, message = "Price must be between IDR {min} and IDR {max}.")
   private double price;
 
-  @Range(min = 0, max = 1, message = "Discount must be between ${min * 100} and ${max * 100} percent.")
+  @Range(min = 0, max = 1, message = "Discount must be between ${min * 100}% and ${max * 100}% (inclusive).")
   private double discount = 0;
 
 }
