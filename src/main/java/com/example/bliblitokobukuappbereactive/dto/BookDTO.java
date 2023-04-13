@@ -26,10 +26,10 @@ public class BookDTO {
   @Range(min = 0, max = 100, message = "Stock must not be more than {max}.")
   private int stock;
 
-  @Range(min = 1000, max = 100000, message = "Price must be between IDR {min} and {max}.")
+  @Range(min = 1000, max = 1000000, message = "Price must be between IDR {min} and {max}.")
   private double price;
 
-  @Range(min = 0, max = 100, message = "Discount must be between {min} and {max} percent.")
+  @Range(min = 0, max = 1, message = "Discount must be between {min * 100} and {max * 100} percent.")
   private double discount = 0;
 
 }

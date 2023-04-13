@@ -1,10 +1,9 @@
 package com.example.bliblitokobukuappbereactive;
 
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 
-import java.util.Collections;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
@@ -12,23 +11,23 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
 import com.example.bliblitokobukuappbereactive.controller.BookController;
+import com.example.bliblitokobukuappbereactive.dto.BookDTO;
+import com.example.bliblitokobukuappbereactive.dto.embedded.GetBookWebResponse;
 import com.example.bliblitokobukuappbereactive.model.Book;
 import com.example.bliblitokobukuappbereactive.service.BookService;
 import com.github.javafaker.Faker;
 
 import lombok.extern.slf4j.Slf4j;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @ExtendWith(SpringExtension.class)
@@ -38,25 +37,26 @@ public class BookUnitTest {
     @Autowired
     private WebTestClient webTestClient;
 
-    @Mock
+    @MockBean
     BookService bookService;
     @InjectMocks
     BookController bookController;
-    private final Logger logger = LoggerFactory.getLogger(BookUnitTest.class);
     private final Faker faker = new Faker();
 
 
     @BeforeEach
     public void before() {
+        log.info("mulai tes");
        openMocks(this);
     }
 
 
     @Test
-    public void getAllBookTest() throws  InterruptedException {
+    public void getAllBookTest() throws ExecutionException, InterruptedException {
 
-        when(bookService.getBooks(null))
-                .thenReturn(Flux.fromIterable(Collections.emptyList()));
+
+        when(bookService.getBooks(null, 1, 1))
+                .thenReturn(Mono.just(new GetBookWebResponse()));
 
 
         webTestClient.get().uri("/gdn-bookstore-api/books/")
@@ -94,11 +94,15 @@ public class BookUnitTest {
                 faker.company().name(),
                 faker.name().fullName(),
                 random.nextInt(100000),
-                random.nextInt(100000)
+                35000,
+                0
         );
         newBook.setId("1");
 
-        when(bookService.updateBook( newBook.getId(), newBook))
+        BookDTO bookDTO = new BookDTO();
+        BeanUtils.copyProperties(newBook, bookDTO);
+
+        when(bookService.updateBook( newBook.getId(), bookDTO))
                 .thenReturn(Mono.just(newBook));
 
         webTestClient.put().uri("/gdn-bookstore-api/books/update/{bookId}", newBook.getId())
@@ -123,7 +127,10 @@ public class BookUnitTest {
         );
         newBook.setId("1");
 
-        when(bookService.updateBook(newBook.getId(), newBook))
+        BookDTO bookDTO = new BookDTO();
+        BeanUtils.copyProperties(newBook, bookDTO);
+
+        when(bookService.updateBook(newBook.getId(), bookDTO))
                 .thenReturn(Mono.just(newBook));
 
         webTestClient.delete().uri("/gdn-bookstore-api/books/delete/{bookId}", newBook.getId())
@@ -147,7 +154,7 @@ public class BookUnitTest {
         );
         newBook.setId("1");
 
-        when(bookService.findBookById( anyString()))
+        when(bookService.findBookById( newBook.getId()))
             .thenReturn(Mono.just(newBook));
 
         webTestClient.get().uri("/gdn-bookstore-api/books/1")
@@ -156,13 +163,7 @@ public class BookUnitTest {
                 .expectBody()
                 .jsonPath("$.title").isEqualTo(newBook.getTitle())
         ;
-    }
 
-
-    @Test
-    public void findBookByTitle() throws InterruptedException, ExecutionException {
-        String title = "";
-        when(bookController.getBooks(title, 1, 25))
-                .thenReturn(bookController.getBooks(title, 1, 25));
+        verify(bookService).findBookById("1");
     }
 }

@@ -1,6 +1,8 @@
 package com.example.bliblitokobukuappbereactive.model;
 
-import lombok.*;
+import com.example.bliblitokobukuappbereactive.model.metadata.AuditMetadata;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -10,8 +12,8 @@ import java.time.ZoneId;
 
 @Data
 @NoArgsConstructor
-@Document(collection = "transactions")
-public class Transaction {
+@Document(collection = Transaction.COLLECTION_NAME)
+public class Transaction extends AuditMetadata {
 
     public static final String COLLECTION_NAME = "transactions";
 

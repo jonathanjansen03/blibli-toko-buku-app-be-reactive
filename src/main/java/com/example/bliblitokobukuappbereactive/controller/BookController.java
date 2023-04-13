@@ -35,27 +35,18 @@ public class BookController {
     @GetMapping()
     public Mono<GetBookWebResponse> getBooks
     (
-            @RequestParam(required = false) String title,
-            @RequestParam(required = false, defaultValue = "1") long page,
-            @RequestParam(required = false, defaultValue = "25") long size
+        @RequestParam(required = false) String title,
+        @RequestParam(required = false, defaultValue = "1") long page,
+        @RequestParam(required = false, defaultValue = "25") long size
     )
-            throws ExecutionException, InterruptedException
     {
-        Flux<Book> bookFlux = bookService
-                            .getBooks(title)
-                            .subscribeOn(Schedulers.boundedElastic());
-
-        long documentCount = bookFlux.count().toFuture().get();
-
-
-        List<Book> bookList = bookFlux
-                .skip((page-1) * size)
-                .take(size)
-                .collectList()
-                .toFuture()
-                .get();
-
-        return Mono.just(new GetBookWebResponse(documentCount, bookList));
+        try {
+            return bookService.getBooks(title, page, size);
+        }
+        catch (ExecutionException | InterruptedException e) {
+            System.out.println("Error : " + e);
+            return Mono.empty();
+        }
     }
 
     @PostMapping
@@ -64,7 +55,7 @@ public class BookController {
         consumes = {MediaType.APPLICATION_JSON_VALUE},
         produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    public Mono<Book> insertBook(@RequestBody @Valid BookDTO bookDTO)
+    public Mono<Book> insertBook(@Valid @RequestBody BookDTO bookDTO)
     {
         return bookService.insertBook(bookDTO);
     }
@@ -75,9 +66,9 @@ public class BookController {
         consumes = {MediaType.APPLICATION_JSON_VALUE},
         produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    public Mono<Book> updateBook(@RequestBody Book book, @PathVariable("bookId") String id)
+    public Mono<Book> updateBook(@Valid @RequestBody BookDTO bookDTO, @PathVariable("bookId") String id)
     {
-        return bookService.updateBook(id, book);
+        return bookService.updateBook(id, bookDTO);
     }
 
     @DeleteMapping(path = "/delete/{bookId}")
@@ -86,4 +77,8 @@ public class BookController {
         return bookService.deleteBook(id);
     }
 
+    @GetMapping(path = "/{bookId}")
+    public Mono<Book> findBookById(@PathVariable("bookId") String id) {
+        return bookService.findBookById(id);
+    }
 }

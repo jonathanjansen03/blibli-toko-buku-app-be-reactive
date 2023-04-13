@@ -3,6 +3,7 @@ package com.example.bliblitokobukuappbereactive;
 import java.util.Random;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -54,7 +55,7 @@ public class BookIntegrationTest {
                 faker.company().name(),
                 faker.name().fullName(),
                 random.nextInt(100000),
-                random.nextInt(100000)
+                random.nextInt(100000)+ 35000
         );
     }
 
@@ -65,12 +66,13 @@ public class BookIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBodyList(Book.class)
-                .contains(book)
+                .expectBody()
+                .jsonPath("$.documentCount").isEqualTo(1)
         ;
     }
     @Test
     public void insertSingleBookTest() {
+        Assertions.assertNull(bookRepository.findAll().count().block());
 
         webTestClient.post().uri("/gdn-bookstore-api/books/insert")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -84,6 +86,8 @@ public class BookIntegrationTest {
                 .jsonPath("$.stock").isEqualTo(book.getStock())
                 .jsonPath("$.price").isEqualTo(book.getPrice())
         ;
+        // Test dari DB nya jg
+        Assertions.assertEquals(bookRepository.findById(book.getId()).block(), book);
     }
 
     @Test
