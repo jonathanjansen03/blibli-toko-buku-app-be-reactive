@@ -4,29 +4,32 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Data;
 
-import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
+
+import javax.validation.constraints.Size;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class BookDTO {
 
-    private String id;
+  private String id;
 
-    @Length(min = 1, message = "Title is mandatory")
-    private String title;
+  @Size(min = 1, message = "Title is mandatory.")
+  @Size(max = 100, message = "Title must not be more than {max} characters.")
+  private String title;
 
-    @Length(min = 1, message = "Author is mandatory")
-    private String author;
+  @Size(min = 1, message = "Author is mandatory.")
+  @Size(max = 100, message = "Author must not be more than {max} characters.")
+  private String author;
 
-    @Range(min = 0, message = "Stock must be greater than or equals to 0")
-    private int stock;
+  @Range(min = 0, max = 100, message = "Stock must not be more than {max}.")
+  private int stock;
 
-    @Range(min = 35000, message = "Price must be greater than 35000")
-    private double price;
+  @Range(min = 1000, max = 100000, message = "Price must be between IDR {min} and {max}.")
+  private double price;
 
-    @Range(min = 0, max = 1, message = "Discount value must be between 0-1")
-    private double discount = 0;
+  @Range(min = 0, max = 100, message = "Discount must be between {min} and {max} percent.")
+  private double discount = 0;
 
 }
