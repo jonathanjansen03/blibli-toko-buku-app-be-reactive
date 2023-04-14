@@ -1,28 +1,19 @@
 package com.example.bliblitokobukuappbereactive.controller;
 
+import java.util.concurrent.ExecutionException;
+
+import javax.validation.Valid;
+
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+
 import com.example.bliblitokobukuappbereactive.dto.BookDTO;
 import com.example.bliblitokobukuappbereactive.dto.embedded.GetBookWebResponse;
 import com.example.bliblitokobukuappbereactive.model.Book;
-import com.example.bliblitokobukuappbereactive.service.BookService;
-import lombok.AllArgsConstructor;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
+import com.example.bliblitokobukuappbereactive.service.impl.BookServiceImpl;
 
-import javax.validation.Valid;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
+import lombok.AllArgsConstructor;
+import reactor.core.publisher.Mono;
 
 @AllArgsConstructor
 @RestController
@@ -30,7 +21,7 @@ import java.util.concurrent.ExecutionException;
 @RequestMapping("/gdn-bookstore-api/books")
 public class BookController {
 
-    private BookService bookService;
+    private BookServiceImpl bookServiceImpl;
 
     @GetMapping()
     public Mono<GetBookWebResponse> getBooks
@@ -41,7 +32,7 @@ public class BookController {
     )
     {
         try {
-            return bookService.getBooks(title, page, size);
+            return bookServiceImpl.getBooks(title, page, size);
         }
         catch (ExecutionException | InterruptedException e) {
             System.out.println("Error : " + e);
@@ -57,7 +48,7 @@ public class BookController {
     )
     public Mono<Book> insertBook(@Valid @RequestBody BookDTO bookDTO)
     {
-        return bookService.insertBook(bookDTO);
+        return bookServiceImpl.insertBook(bookDTO);
     }
 
     @PutMapping
@@ -68,17 +59,17 @@ public class BookController {
     )
     public Mono<Book> updateBook(@Valid @RequestBody BookDTO bookDTO, @PathVariable("bookId") String id)
     {
-        return bookService.updateBook(id, bookDTO);
+        return bookServiceImpl.updateBook(id, bookDTO);
     }
 
     @DeleteMapping(path = "/delete/{bookId}")
     public Mono<Void> deleteBook(@PathVariable("bookId") String id)
     {
-        return bookService.deleteBook(id);
+        return bookServiceImpl.deleteBook(id);
     }
 
     @GetMapping(path = "/{bookId}")
     public Mono<Book> findBookById(@PathVariable("bookId") String id) {
-        return bookService.findBookById(id);
+        return bookServiceImpl.findBookById(id);
     }
 }

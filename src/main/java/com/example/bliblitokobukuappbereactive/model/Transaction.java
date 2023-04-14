@@ -1,14 +1,16 @@
 package com.example.bliblitokobukuappbereactive.model;
 
-import com.example.bliblitokobukuappbereactive.model.metadata.AuditMetadata;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import com.example.bliblitokobukuappbereactive.model.metadata.AuditMetadata;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor

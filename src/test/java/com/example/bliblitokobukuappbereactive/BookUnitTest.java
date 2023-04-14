@@ -24,7 +24,7 @@ import com.example.bliblitokobukuappbereactive.controller.BookController;
 import com.example.bliblitokobukuappbereactive.dto.BookDTO;
 import com.example.bliblitokobukuappbereactive.dto.embedded.GetBookWebResponse;
 import com.example.bliblitokobukuappbereactive.model.Book;
-import com.example.bliblitokobukuappbereactive.service.BookService;
+import com.example.bliblitokobukuappbereactive.service.impl.BookServiceImpl;
 import com.github.javafaker.Faker;
 
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +38,7 @@ public class BookUnitTest {
     private WebTestClient webTestClient;
 
     @MockBean
-    BookService bookService;
+    BookServiceImpl bookServiceImpl;
     @InjectMocks
     BookController bookController;
     private final Faker faker = new Faker();
@@ -55,7 +55,7 @@ public class BookUnitTest {
     public void getAllBookTest() throws ExecutionException, InterruptedException {
 
 
-        when(bookService.getBooks(null, 1, 1))
+        when(bookServiceImpl.getBooks(null, 1, 1))
                 .thenReturn(Mono.just(new GetBookWebResponse()));
 
 
@@ -102,7 +102,7 @@ public class BookUnitTest {
         BookDTO bookDTO = new BookDTO();
         BeanUtils.copyProperties(newBook, bookDTO);
 
-        when(bookService.updateBook( newBook.getId(), bookDTO))
+        when(bookServiceImpl.updateBook( newBook.getId(), bookDTO))
                 .thenReturn(Mono.just(newBook));
 
         webTestClient.put().uri("/gdn-bookstore-api/books/update/{bookId}", newBook.getId())
@@ -130,7 +130,7 @@ public class BookUnitTest {
         BookDTO bookDTO = new BookDTO();
         BeanUtils.copyProperties(newBook, bookDTO);
 
-        when(bookService.updateBook(newBook.getId(), bookDTO))
+        when(bookServiceImpl.updateBook(newBook.getId(), bookDTO))
                 .thenReturn(Mono.just(newBook));
 
         webTestClient.delete().uri("/gdn-bookstore-api/books/delete/{bookId}", newBook.getId())
@@ -154,7 +154,7 @@ public class BookUnitTest {
         );
         newBook.setId("1");
 
-        when(bookService.findBookById( newBook.getId()))
+        when(bookServiceImpl.findBookById( newBook.getId()))
             .thenReturn(Mono.just(newBook));
 
         webTestClient.get().uri("/gdn-bookstore-api/books/1")
@@ -164,6 +164,6 @@ public class BookUnitTest {
                 .jsonPath("$.title").isEqualTo(newBook.getTitle())
         ;
 
-        verify(bookService).findBookById("1");
+        verify(bookServiceImpl).findBookById("1");
     }
 }

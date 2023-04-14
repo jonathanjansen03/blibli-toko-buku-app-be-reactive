@@ -1,21 +1,25 @@
 package com.example.bliblitokobukuappbereactive.model;
 
-import com.example.bliblitokobukuappbereactive.dto.BookDTO;
-import com.example.bliblitokobukuappbereactive.dto.openlibrary.OpenLibraryBook;
-import com.example.bliblitokobukuappbereactive.model.metadata.AuditMetadata;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.util.Random;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Random;
+import com.example.bliblitokobukuappbereactive.dto.BookDTO;
+import com.example.bliblitokobukuappbereactive.dto.openlibrary.OpenLibraryBook;
+import com.example.bliblitokobukuappbereactive.model.metadata.AuditMetadata;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 @Document(collection = Book.COLLECTION_NAME)
 public class Book extends AuditMetadata {
 
