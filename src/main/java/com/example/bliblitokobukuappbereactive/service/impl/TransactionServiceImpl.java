@@ -1,7 +1,5 @@
 package com.example.bliblitokobukuappbereactive.service.impl;
 
-import java.util.concurrent.ExecutionException;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -11,6 +9,7 @@ import com.example.bliblitokobukuappbereactive.dto.TransactionDTO;
 import com.example.bliblitokobukuappbereactive.model.Transaction;
 import com.example.bliblitokobukuappbereactive.repository.BookRepository;
 import com.example.bliblitokobukuappbereactive.repository.TransactionRepository;
+import com.example.bliblitokobukuappbereactive.service.TransactionService;
 
 import lombok.AllArgsConstructor;
 import reactor.core.publisher.Flux;
@@ -19,22 +18,24 @@ import reactor.core.publisher.Mono;
 @Component
 @AllArgsConstructor
 @Service
-public class TransactionServiceImpl {
+public class TransactionServiceImpl implements TransactionService {
     private TransactionRepository transactionRepository;
     private BookRepository bookRepository;
 
+    @Override
     public Flux<Transaction> getAllTransaction()
     {
         return transactionRepository.findAll();
     }
 
+    @Override
     public Flux<Transaction> getMonthlyReport(int month, int year)
     {
         return transactionRepository.getMonthlyReport(month, year);
     }
 
+    @Override
     public Mono<Transaction> insertTransaction(TransactionDTO transactionDTO)
-            throws ExecutionException, InterruptedException
     {
         return bookRepository
                 .findById(transactionDTO.getBookId())
@@ -52,6 +53,7 @@ public class TransactionServiceImpl {
                 .flatMap(retrievedBook -> transactionRepository.save(new Transaction(retrievedBook, transactionDTO.getQty())));
     }
 
+    @Override
     public Mono<Void> deleteTransaction(final String id)
     {
         return transactionRepository.deleteById(id);

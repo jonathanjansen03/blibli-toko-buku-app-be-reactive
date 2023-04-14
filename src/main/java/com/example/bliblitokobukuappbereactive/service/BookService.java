@@ -9,12 +9,14 @@ import com.example.bliblitokobukuappbereactive.model.Book;
 import reactor.core.publisher.Mono;
 
 public interface BookService {
-	public Mono<GetBookWebResponse> getBooks(String title, long page, long size) throws ExecutionException, InterruptedException;
-	public Mono<Book> insertBook(BookDTO bookDTO);
+  Mono<GetBookWebResponse> getBooks(String title, long page, long size)
+      throws ExecutionException, InterruptedException;
 
-	public Mono<Book> updateBook(final String id, final BookDTO bookDTO);
+  Mono<Book> insertBook(BookDTO bookDTO);
 
-	public Mono<Void> deleteBook(final String id);
+  Mono<Book> updateBook(final String id, final BookDTO bookDTO);
 
-	public Mono<Book> findBookById(final String id);
+  Mono<Void> deleteBook(final String id);
+
+  Mono<Book> findBookById(final String id);
 }
