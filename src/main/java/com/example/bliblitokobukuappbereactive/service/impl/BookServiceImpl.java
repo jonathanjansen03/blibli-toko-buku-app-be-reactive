@@ -65,7 +65,8 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Mono<GetBookWebResponse> getBooks(String title, long page, long size) throws ExecutionException, InterruptedException {
+    public Mono<GetBookWebResponse> getBooks(String title, int page, int size) throws ExecutionException,
+            InterruptedException {
 
         Flux<Book> bookFlux;
 

@@ -9,7 +9,7 @@ import com.example.bliblitokobukuappbereactive.model.Book;
 import reactor.core.publisher.Mono;
 
 public interface BookService {
-  Mono<GetBookWebResponse> getBooks(String title, long page, long size)
+  Mono<GetBookWebResponse> getBooks(String title, int page, int size)
       throws ExecutionException, InterruptedException;
 
   Mono<Book> insertBook(BookDTO bookDTO);
