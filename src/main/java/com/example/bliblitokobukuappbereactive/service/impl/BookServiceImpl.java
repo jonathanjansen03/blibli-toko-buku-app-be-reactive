@@ -87,7 +87,7 @@ public class BookServiceImpl implements BookService {
         long documentCount = bookFlux.count().toFuture().get();
 
         List<Book> bookList = bookFlux
-                .skip((page-1) * size)
+                .skip((long) (page - 1) * size)
                 .take(size)
                 .collectList()
                 .toFuture()

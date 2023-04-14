@@ -12,6 +12,7 @@ import com.example.bliblitokobukuappbereactive.dto.embedded.GetBookWebResponse;
 import com.example.bliblitokobukuappbereactive.model.Book;
 import com.example.bliblitokobukuappbereactive.service.impl.BookServiceImpl;
 
+import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
@@ -25,6 +26,7 @@ public class BookController {
 
   private BookServiceImpl bookServiceImpl;
 
+  @ApiOperation("Get Books With/out filter")
   @GetMapping()
   public Mono<GetBookWebResponse> getBooks(@RequestParam(required = false) String title,
       @RequestParam(required = false, defaultValue = "1") int page,
@@ -38,6 +40,7 @@ public class BookController {
     }
   }
 
+  @ApiOperation("Insert Book")
   @PostMapping(path = "/insert", consumes = {MediaType.APPLICATION_JSON_VALUE},
       produces = {MediaType.APPLICATION_JSON_VALUE})
   public Mono<Book> insertBook(@Valid @RequestBody BookDTO bookDTO) {
@@ -50,6 +53,7 @@ public class BookController {
     }
   }
 
+  @ApiOperation("Update Book")
   @PutMapping(path = "/update/{bookId}", consumes = {MediaType.APPLICATION_JSON_VALUE},
       produces = {MediaType.APPLICATION_JSON_VALUE})
   public Mono<Book> updateBook(@Valid @RequestBody BookDTO bookDTO,
@@ -63,6 +67,7 @@ public class BookController {
     }
   }
 
+  @ApiOperation("Delete Book")
   @DeleteMapping(path = "/delete/{bookId}")
   public Mono<Void> deleteBook(@PathVariable("bookId") String id) {
     log.info("#deleteBook with book id: {}", id);
@@ -72,9 +77,9 @@ public class BookController {
       log.error("#deleteBook ERROR! errorMessage: {}", e.getMessage(), e);
       return Mono.empty();
     }
-
   }
 
+  @ApiOperation("Find Single Book By Id")
   @GetMapping(path = "/{bookId}")
   public Mono<Book> findBookById(@PathVariable("bookId") String id) {
     log.info("#findSingleBook with book id: {}", id);

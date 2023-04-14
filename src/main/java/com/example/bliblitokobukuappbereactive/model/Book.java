@@ -10,12 +10,10 @@ import com.example.bliblitokobukuappbereactive.dto.BookDTO;
 import com.example.bliblitokobukuappbereactive.dto.openlibrary.OpenLibraryBook;
 import com.example.bliblitokobukuappbereactive.model.metadata.AuditMetadata;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 
+@EqualsAndHashCode (callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Data

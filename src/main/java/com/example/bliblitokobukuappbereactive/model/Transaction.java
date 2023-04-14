@@ -17,21 +17,20 @@ import lombok.NoArgsConstructor;
 @Document(collection = Transaction.COLLECTION_NAME)
 public class Transaction extends AuditMetadata {
 
-    public static final String COLLECTION_NAME = "transactions";
+  public static final String COLLECTION_NAME = "transactions";
 
-    @Id
-    private String id;
+  @Id
+  private String id;
 
-    @Version
-    private int version;
+  @Version
+  private int version;
 
-    private Book book;
-    private int qty;
-    private LocalDateTime purchasedAt = LocalDateTime.now(ZoneId.of("Etc/GMT+7"));
+  private Book book;
+  private int qty;
+  private LocalDateTime purchasedAt = LocalDateTime.now(ZoneId.of("Etc/GMT+7"));
 
-    public  Transaction(Book book, int qty){
-        this.book = book;
-        this.qty = qty;
-    }
-
+  public Transaction(Book book, int qty) {
+    this.book = book;
+    this.qty = qty;
+  }
 }

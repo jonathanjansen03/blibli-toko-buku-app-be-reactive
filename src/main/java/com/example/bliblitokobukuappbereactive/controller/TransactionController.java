@@ -11,6 +11,7 @@ import com.example.bliblitokobukuappbereactive.dto.TransactionDTO;
 import com.example.bliblitokobukuappbereactive.model.Transaction;
 import com.example.bliblitokobukuappbereactive.service.impl.TransactionServiceImpl;
 
+import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -28,12 +29,14 @@ public class TransactionController {
         return transactionServiceImpl.getAllTransaction();
     }
 
+    @ApiOperation("Get Transaction Monthly Report")
     @GetMapping("/report")
     public Flux<Transaction> getMonthlyReport(@RequestParam int month, @RequestParam int year)
     {
         return transactionServiceImpl.getMonthlyReport(month, year);
     }
 
+    @ApiOperation("Insert Transaction")
     @PostMapping
     (
         path = "/insert",
@@ -46,6 +49,7 @@ public class TransactionController {
         return transactionServiceImpl.insertTransaction(transactionDTO);
     }
 
+    @ApiOperation("Delete Transaction")
     @DeleteMapping(path = "/delete/{transactionId}")
     public Mono<Void> deleteTransaction(@PathVariable String transactionId)
     {
