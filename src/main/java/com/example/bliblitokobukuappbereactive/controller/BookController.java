@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import com.example.bliblitokobukuappbereactive.dto.BookDTO;
 import com.example.bliblitokobukuappbereactive.dto.embedded.GetBookWebResponse;
 import com.example.bliblitokobukuappbereactive.model.Book;
-import com.example.bliblitokobukuappbereactive.service.impl.BookServiceImpl;
+import com.example.bliblitokobukuappbereactive.service.BookService;
 
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -28,7 +28,7 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class BookController {
 
-  private BookServiceImpl bookServiceImpl;
+  private BookService bookService;
 
   @ApiOperation("Get Books With/out filter")
   @GetMapping()
@@ -38,7 +38,7 @@ public class BookController {
       @RequestParam(required = false, defaultValue = "25") int size) {
     log.info("#updateBook with book request...");
     try {
-      return bookServiceImpl.getBooks(title, page, size);
+      return bookService.getBooks(title, page, size);
     } catch (ExecutionException | InterruptedException e) {
       System.out.println("Error : " + e);
       return Mono.empty();
@@ -52,7 +52,7 @@ public class BookController {
   public Mono<Book> insertBook(@Valid @RequestBody BookDTO bookDTO) {
     log.info("#insertBook with book request: {}", bookDTO);
     try {
-      return bookServiceImpl.insertBook(bookDTO);
+      return bookService.insertBook(bookDTO);
     } catch (Exception e) {
       log.error("#insertBook ERROR! errorMessage: {}", e.getMessage(), e);
       return Mono.empty();
@@ -73,7 +73,7 @@ public class BookController {
       @PathVariable("bookId") String id) {
     log.info("#updateBook with book request: {}", bookDTO);
     try {
-      return bookServiceImpl.updateBook(id, bookDTO);
+      return bookService.updateBook(id, bookDTO);
     } catch (Exception e) {
       log.error("#updateBook ERROR! errorMessage: {}", e.getMessage(), e);
       return Mono.empty();
@@ -89,7 +89,7 @@ public class BookController {
   public Mono<Void> deleteBook(@PathVariable("bookId") String id) {
     log.info("#deleteBook with book id: {}", id);
     try {
-      return bookServiceImpl.deleteBook(id);
+      return bookService.deleteBook(id);
     } catch (Exception e) {
       log.error("#deleteBook ERROR! errorMessage: {}", e.getMessage(), e);
       return Mono.empty();
@@ -102,7 +102,7 @@ public class BookController {
   public Mono<Book> findBookById(@PathVariable("bookId") String id) {
     log.info("#findSingleBook with book id: {}", id);
     try {
-      return bookServiceImpl.findBookById(id);
+      return bookService.findBookById(id);
     } catch (Exception e) {
       log.error("#findSingleBook ERROR! errorMessage: {}", e.getMessage(), e);
       return Mono.empty();
