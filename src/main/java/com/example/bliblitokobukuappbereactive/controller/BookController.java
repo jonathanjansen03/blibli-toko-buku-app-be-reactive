@@ -36,7 +36,7 @@ public class BookController {
   public Mono<GetBookWebResponse> getBooks(@RequestParam(required = false) String title,
       @RequestParam(required = false, defaultValue = "1") int page,
       @RequestParam(required = false, defaultValue = "25") int size) {
-    log.info("#updateBook with book request...");
+    log.info("#getBook with book request...");
     try {
       return bookService.getBooks(title, page, size);
     } catch (ExecutionException | InterruptedException e) {
