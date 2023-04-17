@@ -1,6 +1,8 @@
 package com.example.bliblitokobukuappbereactive.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -15,8 +17,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.example.bliblitokobukuappbereactive.model.Book;
 import com.example.bliblitokobukuappbereactive.model.dto.BookDTO;
-import com.example.bliblitokobukuappbereactive.model.dto.embedded.GetBookWebResponse;
 import com.example.bliblitokobukuappbereactive.model.dto.openlibrary.OpenLibraryResponse;
+import com.example.bliblitokobukuappbereactive.model.response.Response;
 import com.example.bliblitokobukuappbereactive.repository.BookRepository;
 import com.example.bliblitokobukuappbereactive.service.BookService;
 
@@ -65,7 +67,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Mono<GetBookWebResponse> getBooks(String title, int page, int size) throws ExecutionException,
+    public Mono<Response<Book>> getBooks(String title, int page, int size) throws ExecutionException,
             InterruptedException {
 
         Flux<Book> bookFlux;
@@ -93,7 +95,12 @@ public class BookServiceImpl implements BookService {
                 .toFuture()
                 .get();
 
-        return Mono.just(new GetBookWebResponse(documentCount, bookList));
+        Map<String, String> messageContent = new HashMap<>();
+        messageContent.put("Success", "True");
+
+        Response<Book> bookResponse = Response.<Book>builder().status(HttpStatus.OK.value())
+                .data((Book) bookList).count((int) documentCount).message(messageContent).build();
+        return Mono.just(bookResponse);
     }
 
     @Override

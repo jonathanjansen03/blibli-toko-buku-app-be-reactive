@@ -1,6 +1,6 @@
 package com.example.bliblitokobukuappbereactive.model.response;
 
-import com.example.bliblitokobukuappbereactive.model.dto.BookDTO;
+import java.util.Map;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,11 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BookResponse{
+public class Response<T> {
     private int status;
-    private BookDTO data;
-    private String errorMessage;
-    private int currentPage;
-    private int maximumPage;
-    private int dataSize;
+    private T data;
+    private Map<String, String> message;
+    private int count;
 }

@@ -4,12 +4,12 @@ import java.util.concurrent.ExecutionException;
 
 import com.example.bliblitokobukuappbereactive.model.Book;
 import com.example.bliblitokobukuappbereactive.model.dto.BookDTO;
-import com.example.bliblitokobukuappbereactive.model.dto.embedded.GetBookWebResponse;
+import com.example.bliblitokobukuappbereactive.model.response.Response;
 
 import reactor.core.publisher.Mono;
 
 public interface BookService {
-  Mono<GetBookWebResponse> getBooks(String title, int page, int size)
+  Mono<Response<Book>> getBooks(String title, int page, int size)
       throws ExecutionException, InterruptedException;
 
   Mono<Book> insertBook(BookDTO bookDTO);
