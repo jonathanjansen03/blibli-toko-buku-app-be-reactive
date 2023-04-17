@@ -1,5 +1,6 @@
 package com.example.bliblitokobukuappbereactive.model.response;
 
+import java.util.List;
 import java.util.Map;
 
 import lombok.AllArgsConstructor;
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Response<T> {
     private int status;
-    private T data;
+    private List<T> data;
     private Map<String, String> message;
     private int count;
 }

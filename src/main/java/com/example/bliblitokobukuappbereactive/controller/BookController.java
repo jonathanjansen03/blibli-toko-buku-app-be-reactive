@@ -1,6 +1,8 @@
 package com.example.bliblitokobukuappbereactive.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -38,8 +40,8 @@ public class BookController {
   @GetMapping()
   @Cacheable(value = "find-all-books", key = "#title + '-' + #page + '-' + #size")
   public Mono<Response<Book>> getBooks(@RequestParam(required = false) String title,
-      @RequestParam(required = false, defaultValue = "1") int page,
-      @RequestParam(required = false, defaultValue = "25") int size) {
+                                             @RequestParam(required = false, defaultValue = "1") int page,
+                                             @RequestParam(required = false, defaultValue = "25") int size) {
     log.info("#getBook with book request...");
     try {
       return bookService.getBooks(title, page, size);
@@ -118,10 +120,13 @@ public class BookController {
   private Mono<Response<Book>> getResponseMono(Mono<Book> bookMono)
       throws ExecutionException, InterruptedException {
     Book bookData = monoToBookConverter(bookMono);
+    List<Book> bookList = new ArrayList<>();
+    bookList.add(bookData);
+
     Map<String, String> messageContent = new HashMap<>();
     messageContent.put("Success", "True");
     Response<Book> bookResponse = Response.<Book>builder().status(HttpStatus.OK.value())
-        .data(bookData).message(messageContent).build();
+        .data(bookList).message(messageContent).build();
     return Mono.just(bookResponse);
   }
 

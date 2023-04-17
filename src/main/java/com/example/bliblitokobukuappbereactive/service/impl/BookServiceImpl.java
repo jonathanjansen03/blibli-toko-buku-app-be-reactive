@@ -99,7 +99,7 @@ public class BookServiceImpl implements BookService {
         messageContent.put("Success", "True");
 
         Response<Book> bookResponse = Response.<Book>builder().status(HttpStatus.OK.value())
-                .data((Book) bookList).count((int) documentCount).message(messageContent).build();
+                .data(bookList).count((int) documentCount).message(messageContent).build();
         return Mono.just(bookResponse);
     }
 
