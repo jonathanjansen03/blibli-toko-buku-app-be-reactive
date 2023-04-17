@@ -7,8 +7,8 @@ import javax.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.bliblitokobukuappbereactive.dto.TransactionDTO;
 import com.example.bliblitokobukuappbereactive.model.Transaction;
+import com.example.bliblitokobukuappbereactive.model.dto.TransactionDTO;
 import com.example.bliblitokobukuappbereactive.service.impl.TransactionServiceImpl;
 
 import io.swagger.annotations.ApiOperation;

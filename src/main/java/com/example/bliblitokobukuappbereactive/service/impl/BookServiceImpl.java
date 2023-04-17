@@ -13,10 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.example.bliblitokobukuappbereactive.dto.BookDTO;
-import com.example.bliblitokobukuappbereactive.dto.embedded.GetBookWebResponse;
-import com.example.bliblitokobukuappbereactive.dto.openlibrary.OpenLibraryResponse;
 import com.example.bliblitokobukuappbereactive.model.Book;
+import com.example.bliblitokobukuappbereactive.model.dto.BookDTO;
+import com.example.bliblitokobukuappbereactive.model.dto.embedded.GetBookWebResponse;
+import com.example.bliblitokobukuappbereactive.model.dto.openlibrary.OpenLibraryResponse;
 import com.example.bliblitokobukuappbereactive.repository.BookRepository;
 import com.example.bliblitokobukuappbereactive.service.BookService;
 

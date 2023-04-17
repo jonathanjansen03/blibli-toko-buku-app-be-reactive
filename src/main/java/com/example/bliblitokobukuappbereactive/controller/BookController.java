@@ -11,9 +11,9 @@ import org.springframework.cache.annotation.Caching;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.bliblitokobukuappbereactive.dto.BookDTO;
-import com.example.bliblitokobukuappbereactive.dto.embedded.GetBookWebResponse;
 import com.example.bliblitokobukuappbereactive.model.Book;
+import com.example.bliblitokobukuappbereactive.model.dto.BookDTO;
+import com.example.bliblitokobukuappbereactive.model.dto.embedded.GetBookWebResponse;
 import com.example.bliblitokobukuappbereactive.service.BookService;
 
 import io.swagger.annotations.ApiOperation;

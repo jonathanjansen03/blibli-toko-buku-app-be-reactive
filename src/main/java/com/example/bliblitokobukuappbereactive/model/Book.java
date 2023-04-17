@@ -6,8 +6,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.example.bliblitokobukuappbereactive.dto.BookDTO;
-import com.example.bliblitokobukuappbereactive.dto.openlibrary.OpenLibraryBook;
+import com.example.bliblitokobukuappbereactive.model.dto.BookDTO;
+import com.example.bliblitokobukuappbereactive.model.dto.openlibrary.OpenLibraryBook;
 import com.example.bliblitokobukuappbereactive.model.metadata.AuditMetadata;
 
 import lombok.*;

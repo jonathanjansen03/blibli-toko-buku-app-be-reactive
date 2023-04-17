@@ -3,7 +3,7 @@ package com.example.bliblitokobukuappbereactive.service.listener;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
-import com.example.bliblitokobukuappbereactive.dto.BookDTO;
+import com.example.bliblitokobukuappbereactive.model.dto.BookDTO;
 import com.example.bliblitokobukuappbereactive.service.BookListenerService;
 import com.example.bliblitokobukuappbereactive.service.BookService;
 

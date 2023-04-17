@@ -1,10 +1,12 @@
-package com.example.bliblitokobukuappbereactive.dto;
+package com.example.bliblitokobukuappbereactive.model.dto;
+
+import org.hibernate.validator.constraints.Range;
 
 import com.example.bliblitokobukuappbereactive.constraint.ExistsConstraint;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Range;
 
 @AllArgsConstructor
 @NoArgsConstructor

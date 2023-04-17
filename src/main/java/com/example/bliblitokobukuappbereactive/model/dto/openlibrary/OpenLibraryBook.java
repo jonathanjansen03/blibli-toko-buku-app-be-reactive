@@ -1,10 +1,10 @@
-package com.example.bliblitokobukuappbereactive.dto.openlibrary;
+package com.example.bliblitokobukuappbereactive.model.dto.openlibrary;
+
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor

@@ -1,12 +1,12 @@
-package com.example.bliblitokobukuappbereactive.dto;
+package com.example.bliblitokobukuappbereactive.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.Data;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Range;
 
-import javax.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor

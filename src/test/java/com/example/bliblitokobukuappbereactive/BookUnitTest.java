@@ -21,9 +21,9 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
 import com.example.bliblitokobukuappbereactive.controller.BookController;
-import com.example.bliblitokobukuappbereactive.dto.BookDTO;
-import com.example.bliblitokobukuappbereactive.dto.embedded.GetBookWebResponse;
 import com.example.bliblitokobukuappbereactive.model.Book;
+import com.example.bliblitokobukuappbereactive.model.dto.BookDTO;
+import com.example.bliblitokobukuappbereactive.model.dto.embedded.GetBookWebResponse;
 import com.example.bliblitokobukuappbereactive.service.impl.BookServiceImpl;
 import com.github.javafaker.Faker;
 

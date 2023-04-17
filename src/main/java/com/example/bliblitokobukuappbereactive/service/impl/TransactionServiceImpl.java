@@ -5,8 +5,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.example.bliblitokobukuappbereactive.dto.TransactionDTO;
 import com.example.bliblitokobukuappbereactive.model.Transaction;
+import com.example.bliblitokobukuappbereactive.model.dto.TransactionDTO;
 import com.example.bliblitokobukuappbereactive.repository.BookRepository;
 import com.example.bliblitokobukuappbereactive.repository.TransactionRepository;
 import com.example.bliblitokobukuappbereactive.service.TransactionService;

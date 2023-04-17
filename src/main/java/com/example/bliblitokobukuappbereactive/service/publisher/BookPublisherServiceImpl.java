@@ -3,7 +3,7 @@ package com.example.bliblitokobukuappbereactive.service.publisher;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
-import com.example.bliblitokobukuappbereactive.dto.BookDTO;
+import com.example.bliblitokobukuappbereactive.model.dto.BookDTO;
 import com.example.bliblitokobukuappbereactive.service.BookPublisherService;
 
 import lombok.extern.slf4j.Slf4j;

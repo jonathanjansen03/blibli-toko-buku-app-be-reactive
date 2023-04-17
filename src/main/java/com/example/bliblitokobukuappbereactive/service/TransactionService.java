@@ -2,8 +2,8 @@ package com.example.bliblitokobukuappbereactive.service;
 
 import java.util.concurrent.ExecutionException;
 
-import com.example.bliblitokobukuappbereactive.dto.TransactionDTO;
 import com.example.bliblitokobukuappbereactive.model.Transaction;
+import com.example.bliblitokobukuappbereactive.model.dto.TransactionDTO;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
