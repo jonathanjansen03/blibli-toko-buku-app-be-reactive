@@ -1,8 +1,6 @@
 package com.example.bliblitokobukuappbereactive.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import javax.validation.Valid;
@@ -39,8 +37,8 @@ public class BookController {
   @GetMapping()
   @Cacheable(value = "find-all-books", key = "#title + '-' + #page + '-' + #size")
   public Mono<NormalResponse<List<Book>>> getBooks(@RequestParam(required = false) String title,
-                                                   @RequestParam(required = false, defaultValue = "1") int page,
-                                                   @RequestParam(required = false, defaultValue = "25") int size) {
+      @RequestParam(required = false, defaultValue = "1") int page,
+      @RequestParam(required = false, defaultValue = "25") int size) {
     log.info("#getBook with book request...");
     try {
       return bookService.getBooks(title, page, size);
@@ -71,7 +69,7 @@ public class BookController {
   @Caching(evict = {@CacheEvict(value = "find-all-books", allEntries = true)},
       put = {@CachePut(value = "find-by-id", key = "#id")})
   public Mono<NormalResponse<Book>> updateBook(@Valid @RequestBody BookDTO bookDTO,
-                                               @PathVariable("bookId") String id) {
+      @PathVariable("bookId") String id) {
     log.info("#updateBook with book request: {}", bookDTO);
     try {
       Mono<Book> bookMono = bookService.updateBook(id, bookDTO);
@@ -90,10 +88,8 @@ public class BookController {
     log.info("#deleteBook with book id: {}", id);
     try {
       bookService.deleteBook(id);
-      Map<String, String> messageContent = new HashMap<>();
-      messageContent.put("Success", "True");
-      NormalResponse<Void> response = NormalResponse.<Void>builder().status(HttpStatus.OK.value()).data(null)
-          .message(messageContent).build();
+      NormalResponse<Void> response =
+          NormalResponse.<Void>builder().status(HttpStatus.OK.value()).data(null).build();
       return Mono.just(response);
     } catch (Exception e) {
       log.error("#deleteBook ERROR! errorMessage: {}", e.getMessage(), e);
@@ -119,11 +115,8 @@ public class BookController {
   private Mono<NormalResponse<Book>> getResponseMono(Mono<Book> bookMono)
       throws ExecutionException, InterruptedException {
     Book bookData = monoToBookConverter(bookMono);
-
-    Map<String, String> messageContent = new HashMap<>();
-    messageContent.put("Success", "True");
     NormalResponse<Book> bookResponse = NormalResponse.<Book>builder().status(HttpStatus.OK.value())
-        .data(bookData).message(messageContent).count(1).build();
+        .data(bookData).count(1).build();
     return Mono.just(bookResponse);
   }
 

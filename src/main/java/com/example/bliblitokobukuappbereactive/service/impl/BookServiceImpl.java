@@ -1,8 +1,6 @@
 package com.example.bliblitokobukuappbereactive.service.impl;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -95,11 +93,8 @@ public class BookServiceImpl implements BookService {
                 .toFuture()
                 .get();
 
-        Map<String, String> messageContent = new HashMap<>();
-        messageContent.put("Success", "True");
-
         NormalResponse<List<Book>> bookResponse = NormalResponse.<List<Book>>builder().status(HttpStatus.OK.value())
-                .data(bookList).count((int) documentCount).message(messageContent).build();
+                .data(bookList).count((int) documentCount).build();
 
 
         return Mono.just(bookResponse);
@@ -142,6 +137,13 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Mono<Book> findBookById(final String id) {
-        return bookRepository.findById(id);
+        return bookRepository.findById(id).switchIfEmpty(
+                Mono.error(
+                        new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Book was not found"
+                        )
+                )
+        );
     }
 }
