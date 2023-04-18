@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.support.WebExchangeBindException;
 
-import com.example.bliblitokobukuappbereactive.model.response.Response;
+import com.example.bliblitokobukuappbereactive.model.response.NormalResponse;
 
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
@@ -20,13 +20,13 @@ public class ApplicationExceptionHandler {
 
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ExceptionHandler({WebExchangeBindException.class})
-  public Mono<Response<?>> WebExchangeBindHandler(WebExchangeBindException ex) {
+  public Mono<NormalResponse<?>> WebExchangeBindHandler(WebExchangeBindException ex) {
     Map<String, String> errorMessage = new HashMap<>();
     ex.getBindingResult().getFieldErrors().forEach(error -> {
       errorMessage.put(error.getField(), error.getDefaultMessage());
       log.info(errorMessage.toString());
     });
-    Response<?> response = Response.builder().status(HttpStatus.BAD_REQUEST.value()).data(null)
+    NormalResponse<?> response = NormalResponse.builder().status(HttpStatus.BAD_REQUEST.value()).data(null)
         .message(errorMessage).build();
     return Mono.just(response);
   }

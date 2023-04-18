@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Response<T> {
+public class NormalResponse<T> {
     private int status;
     private T data;
     private Map<String, String> message;

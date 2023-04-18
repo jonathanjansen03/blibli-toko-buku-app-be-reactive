@@ -18,7 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.example.bliblitokobukuappbereactive.model.Book;
 import com.example.bliblitokobukuappbereactive.model.dto.BookDTO;
 import com.example.bliblitokobukuappbereactive.model.dto.openlibrary.OpenLibraryResponse;
-import com.example.bliblitokobukuappbereactive.model.response.Response;
+import com.example.bliblitokobukuappbereactive.model.response.NormalResponse;
 import com.example.bliblitokobukuappbereactive.repository.BookRepository;
 import com.example.bliblitokobukuappbereactive.service.BookService;
 
@@ -67,7 +67,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Mono<Response<List<Book>>> getBooks(String title, int page, int size) throws ExecutionException,
+    public Mono<NormalResponse<List<Book>>> getBooks(String title, int page, int size) throws ExecutionException,
             InterruptedException {
 
         Flux<Book> bookFlux;
@@ -98,7 +98,7 @@ public class BookServiceImpl implements BookService {
         Map<String, String> messageContent = new HashMap<>();
         messageContent.put("Success", "True");
 
-        Response<List<Book>> bookResponse = Response.<List<Book>>builder().status(HttpStatus.OK.value())
+        NormalResponse<List<Book>> bookResponse = NormalResponse.<List<Book>>builder().status(HttpStatus.OK.value())
                 .data(bookList).count((int) documentCount).message(messageContent).build();
 
 

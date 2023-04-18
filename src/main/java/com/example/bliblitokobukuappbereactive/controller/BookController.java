@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.bliblitokobukuappbereactive.model.Book;
 import com.example.bliblitokobukuappbereactive.model.dto.BookDTO;
-import com.example.bliblitokobukuappbereactive.model.response.Response;
+import com.example.bliblitokobukuappbereactive.model.response.NormalResponse;
 import com.example.bliblitokobukuappbereactive.service.BookService;
 
 import io.swagger.annotations.ApiOperation;
@@ -38,9 +38,9 @@ public class BookController {
   @ApiOperation("Get Books With/out filter")
   @GetMapping()
   @Cacheable(value = "find-all-books", key = "#title + '-' + #page + '-' + #size")
-  public Mono<Response<List<Book>>> getBooks(@RequestParam(required = false) String title,
-                                             @RequestParam(required = false, defaultValue = "1") int page,
-                                             @RequestParam(required = false, defaultValue = "25") int size) {
+  public Mono<NormalResponse<List<Book>>> getBooks(@RequestParam(required = false) String title,
+                                                   @RequestParam(required = false, defaultValue = "1") int page,
+                                                   @RequestParam(required = false, defaultValue = "25") int size) {
     log.info("#getBook with book request...");
     try {
       return bookService.getBooks(title, page, size);
@@ -54,7 +54,7 @@ public class BookController {
   @PostMapping(path = "/insert", consumes = {MediaType.APPLICATION_JSON_VALUE},
       produces = {MediaType.APPLICATION_JSON_VALUE})
   @CacheEvict(value = "find-all-books", allEntries = true)
-  public Mono<Response<Book>> insertBook(@Valid @RequestBody BookDTO bookDTO) {
+  public Mono<NormalResponse<Book>> insertBook(@Valid @RequestBody BookDTO bookDTO) {
     log.info("#insertBook with book request: {}", bookDTO);
     try {
       Mono<Book> bookMono = bookService.insertBook(bookDTO);
@@ -70,8 +70,8 @@ public class BookController {
       produces = {MediaType.APPLICATION_JSON_VALUE})
   @Caching(evict = {@CacheEvict(value = "find-all-books", allEntries = true)},
       put = {@CachePut(value = "find-by-id", key = "#id")})
-  public Mono<Response<Book>> updateBook(@Valid @RequestBody BookDTO bookDTO,
-      @PathVariable("bookId") String id) {
+  public Mono<NormalResponse<Book>> updateBook(@Valid @RequestBody BookDTO bookDTO,
+                                               @PathVariable("bookId") String id) {
     log.info("#updateBook with book request: {}", bookDTO);
     try {
       Mono<Book> bookMono = bookService.updateBook(id, bookDTO);
@@ -86,13 +86,13 @@ public class BookController {
   @DeleteMapping(path = "/delete/{bookId}")
   @Caching(evict = {@CacheEvict(value = "find-all-books", allEntries = true),
       @CacheEvict(value = "find-by-id", key = "#id")})
-  public Mono<Response<Void>> deleteBook(@PathVariable("bookId") String id) {
+  public Mono<NormalResponse<Void>> deleteBook(@PathVariable("bookId") String id) {
     log.info("#deleteBook with book id: {}", id);
     try {
       bookService.deleteBook(id);
       Map<String, String> messageContent = new HashMap<>();
       messageContent.put("Success", "True");
-      Response<Void> response = Response.<Void>builder().status(HttpStatus.OK.value()).data(null)
+      NormalResponse<Void> response = NormalResponse.<Void>builder().status(HttpStatus.OK.value()).data(null)
           .message(messageContent).build();
       return Mono.just(response);
     } catch (Exception e) {
@@ -104,7 +104,7 @@ public class BookController {
   @ApiOperation("Find Single Book By Id")
   @GetMapping(path = "/{bookId}")
   @Cacheable(value = "find-by-id", key = "#id")
-  public Mono<Response<Book>> findBookById(@PathVariable("bookId") String id) {
+  public Mono<NormalResponse<Book>> findBookById(@PathVariable("bookId") String id) {
     log.info("#findSingleBook with book id: {}", id);
     try {
       Mono<Book> bookMono = bookService.findBookById(id);
@@ -116,13 +116,13 @@ public class BookController {
   }
 
   @NotNull
-  private Mono<Response<Book>> getResponseMono(Mono<Book> bookMono)
+  private Mono<NormalResponse<Book>> getResponseMono(Mono<Book> bookMono)
       throws ExecutionException, InterruptedException {
     Book bookData = monoToBookConverter(bookMono);
 
     Map<String, String> messageContent = new HashMap<>();
     messageContent.put("Success", "True");
-    Response<Book> bookResponse = Response.<Book>builder().status(HttpStatus.OK.value())
+    NormalResponse<Book> bookResponse = NormalResponse.<Book>builder().status(HttpStatus.OK.value())
         .data(bookData).message(messageContent).count(1).build();
     return Mono.just(bookResponse);
   }
