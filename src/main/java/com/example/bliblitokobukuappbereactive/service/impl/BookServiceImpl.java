@@ -67,7 +67,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Mono<Response<Book>> getBooks(String title, int page, int size) throws ExecutionException,
+    public Mono<Response<List<Book>>> getBooks(String title, int page, int size) throws ExecutionException,
             InterruptedException {
 
         Flux<Book> bookFlux;
@@ -98,8 +98,10 @@ public class BookServiceImpl implements BookService {
         Map<String, String> messageContent = new HashMap<>();
         messageContent.put("Success", "True");
 
-        Response<Book> bookResponse = Response.<Book>builder().status(HttpStatus.OK.value())
+        Response<List<Book>> bookResponse = Response.<List<Book>>builder().status(HttpStatus.OK.value())
                 .data(bookList).count((int) documentCount).message(messageContent).build();
+
+
         return Mono.just(bookResponse);
     }
 
