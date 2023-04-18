@@ -55,8 +55,8 @@ public class BookController {
   public Mono<NormalResponse<Book>> insertBook(@Valid @RequestBody BookDTO bookDTO) {
     log.info("#insertBook with book request: {}", bookDTO);
     try {
-      Mono<Book> bookMono = bookService.insertBook(bookDTO);
-      return getResponseMono(bookMono);
+      return bookService.insertBook(bookDTO)
+              .map(this::getResponseMono);
     } catch (Exception e) {
       log.error("#insertBook ERROR! errorMessage: {}", e.getMessage(), e);
       return Mono.empty();
@@ -72,8 +72,8 @@ public class BookController {
       @PathVariable("bookId") String id) {
     log.info("#updateBook with book request: {}", bookDTO);
     try {
-      Mono<Book> bookMono = bookService.updateBook(id, bookDTO);
-      return getResponseMono(bookMono);
+      return bookService.updateBook(id, bookDTO)
+              .map(this::getResponseMono);
     } catch (Exception e) {
       log.error("#updateBook ERROR! errorMessage: {}", e.getMessage(), e);
       return Mono.empty();
@@ -102,26 +102,13 @@ public class BookController {
   @Cacheable(value = "find-by-id", key = "#id")
   public Mono<NormalResponse<Book>> findBookById(@PathVariable("bookId") String id) {
     log.info("#findSingleBook with book id: {}", id);
-    try {
-      Mono<Book> bookMono = bookService.findBookById(id);
-      return getResponseMono(bookMono);
-    } catch (Exception e) {
-      log.error("#findSingleBook ERROR! errorMessage: {}", e.getMessage(), e);
-      return Mono.empty();
-    }
+    return bookService.findBookById(id)
+            .map(this::getResponseMono);
   }
 
   @NotNull
-  private Mono<NormalResponse<Book>> getResponseMono(Mono<Book> bookMono)
-      throws ExecutionException, InterruptedException {
-    Book bookData = monoToBookConverter(bookMono);
-    NormalResponse<Book> bookResponse = NormalResponse.<Book>builder().status(HttpStatus.OK.value())
+  private NormalResponse<Book> getResponseMono(Book bookData) {
+    return NormalResponse.<Book>builder().status(HttpStatus.OK.value())
         .data(bookData).count(1).build();
-    return Mono.just(bookResponse);
-  }
-
-  private Book monoToBookConverter(Mono<Book> bookMono)
-      throws ExecutionException, InterruptedException {
-    return bookMono.toFuture().get();
   }
 }

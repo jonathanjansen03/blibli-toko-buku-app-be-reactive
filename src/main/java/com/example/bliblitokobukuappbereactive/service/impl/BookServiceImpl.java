@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.example.bliblitokobukuappbereactive.advice.BookNotFoundException;
 import com.example.bliblitokobukuappbereactive.model.Book;
 import com.example.bliblitokobukuappbereactive.model.dto.BookDTO;
 import com.example.bliblitokobukuappbereactive.model.dto.openlibrary.OpenLibraryResponse;
@@ -29,121 +30,90 @@ import reactor.core.publisher.Mono;
 @Service
 public class BookServiceImpl implements BookService {
 
-    private static final String BASE_URL = "https://openlibrary.org/search.json?title=";
-    private static final String QUERY_LIMIT = "&limit=25";
+  private static final String BASE_URL = "https://openlibrary.org/search.json?title=";
+  private static final String QUERY_LIMIT = "&limit=25";
 
 
-    private BookRepository bookRepository;
-    private ReactiveMongoTemplate reactiveMongoTemplate;
-    private WebClient webClient;
+  private BookRepository bookRepository;
+  private ReactiveMongoTemplate reactiveMongoTemplate;
+  private WebClient webClient;
 
 
-    public Flux<Book> consumeAndSave(String title) {
-        title = title.replace(" ", "+").toLowerCase();
+  public Flux<Book> consumeAndSave(String title) {
+    title = title.replace(" ", "+").toLowerCase();
 
-        Mono<OpenLibraryResponse> responseMono = webClient
-                .get()
-                .uri(BASE_URL + title + QUERY_LIMIT)
-                .exchangeToMono(response -> {
-                    if (response.statusCode().equals(HttpStatus.OK))
-                        return response.bodyToMono(OpenLibraryResponse.class);
-                    else if (response.statusCode().is4xxClientError())
-                        return Mono.empty();
-                    else
-                        return response.createException().flatMap(Mono::error);
-                });
+    Mono<OpenLibraryResponse> responseMono =
+        webClient.get().uri(BASE_URL + title + QUERY_LIMIT).exchangeToMono(response -> {
+          if (response.statusCode().equals(HttpStatus.OK))
+            return response.bodyToMono(OpenLibraryResponse.class);
+          else if (response.statusCode().is4xxClientError())
+            return Mono.empty();
+          else
+            return response.createException().flatMap(Mono::error);
+        });
 
-        return responseMono
-                .map(response ->
-                        response
-                                .getDocs()
-                                .stream()
-                                .map(Book::build)
-                                .collect(Collectors.toList())
-                )
-                .flatMapMany(books -> bookRepository.saveAll(books));
+    return responseMono
+        .map(response ->
+                response.getDocs()
+                        .stream()
+                        .map(Book::build)
+                        .collect(Collectors.toList()))
+        .flatMapMany(books -> bookRepository.saveAll(books));
+  }
+
+  @Override
+  public Mono<NormalResponse<List<Book>>> getBooks(String title, int page, int size)
+      throws ExecutionException, InterruptedException {
+
+    Flux<Book> bookFlux;
+
+    if (title != null && title.trim().length() > 0) {
+      Query query = new Query().addCriteria(Criteria.where("title").regex("\\s*" + title, "i"));
+
+      bookFlux = reactiveMongoTemplate.find(query, Book.class, "books")
+          .switchIfEmpty(consumeAndSave(title));
+    } else {
+      bookFlux = bookRepository.findAll();
     }
 
-    @Override
-    public Mono<NormalResponse<List<Book>>> getBooks(String title, int page, int size) throws ExecutionException,
-            InterruptedException {
+    long documentCount = bookFlux.count().toFuture().get();
 
-        Flux<Book> bookFlux;
+    List<Book> bookList =
+        bookFlux.skip((long) (page - 1) * size).take(size).collectList().toFuture().get();
 
-        if(title != null && title.trim().length() > 0)
-        {
-            Query query = new Query()
-                                .addCriteria(Criteria.where("title")
-                                .regex("\\s*" + title, "i"));
-
-            bookFlux =  reactiveMongoTemplate
-                    .find(query, Book.class, "books")
-                    .switchIfEmpty(consumeAndSave(title));
-        }
-        else {
-            bookFlux = bookRepository.findAll();
-        }
-
-        long documentCount = bookFlux.count().toFuture().get();
-
-        List<Book> bookList = bookFlux
-                .skip((long) (page - 1) * size)
-                .take(size)
-                .collectList()
-                .toFuture()
-                .get();
-
-        NormalResponse<List<Book>> bookResponse = NormalResponse.<List<Book>>builder().status(HttpStatus.OK.value())
-                .data(bookList).count((int) documentCount).build();
+    NormalResponse<List<Book>> bookResponse = NormalResponse.<List<Book>>builder()
+        .status(HttpStatus.OK.value()).data(bookList).count((int) documentCount).build();
 
 
-        return Mono.just(bookResponse);
-    }
+    return Mono.just(bookResponse);
+  }
 
-    @Override
-    public Mono<Book> insertBook(BookDTO bookDTO)
-    {
-        return bookRepository.save(Book.build(bookDTO));
-    }
+  @Override
+  public Mono<Book> insertBook(BookDTO bookDTO) {
+    return bookRepository.save(Book.build(bookDTO));
+  }
 
-    @Override
-    public Mono<Book> updateBook(final String id, final BookDTO bookDTO)
-    {
-        return bookRepository
-                .findById(id)
-                .flatMap(foundBook -> {
-                    foundBook.setTitle(bookDTO.getTitle());
-                    foundBook.setAuthor(bookDTO.getAuthor());
-                    foundBook.setStock(bookDTO.getStock());
-                    foundBook.setPrice(bookDTO.getPrice());
-                    foundBook.setDiscount(bookDTO.getDiscount());
-                    return bookRepository.save(foundBook);
-                })
-                .switchIfEmpty(
-                    Mono.error(
-                        new ResponseStatusException(
-                            HttpStatus.BAD_REQUEST,
-                            "Book was not found"
-                        )
-                    )
-                );
-    }
+  @Override
+  public Mono<Book> updateBook(final String id, final BookDTO bookDTO) {
+    return bookRepository.findById(id).flatMap(foundBook -> {
+      foundBook.setTitle(bookDTO.getTitle());
+      foundBook.setAuthor(bookDTO.getAuthor());
+      foundBook.setStock(bookDTO.getStock());
+      foundBook.setPrice(bookDTO.getPrice());
+      foundBook.setDiscount(bookDTO.getDiscount());
+      return bookRepository.save(foundBook);
+    }).switchIfEmpty(
+        Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Book was not found")));
+  }
 
-    @Override
-    public Mono<Void> deleteBook(final String id)
-    {
-        return bookRepository.deleteById(id);
-    }
+  @Override
+  public Mono<Void> deleteBook(final String id) {
+    return bookRepository.deleteById(id);
+  }
 
-    @Override
-    public Mono<Book> findBookById(final String id) {
-        return bookRepository.findById(id).switchIfEmpty(
-                Mono.error(
-                        new ResponseStatusException(
-                                HttpStatus.NOT_FOUND,
-                                "Book was not found"
-                        )
-                )
-        );
-    }
+  @Override
+  public Mono<Book> findBookById(final String id) {
+    return bookRepository.findById(id)
+        .switchIfEmpty(Mono.error(new BookNotFoundException("Book Not Found")));
+  }
 }

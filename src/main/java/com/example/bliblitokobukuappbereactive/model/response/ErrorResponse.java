@@ -1,7 +1,5 @@
 package com.example.bliblitokobukuappbereactive.model.response;
 
-import java.util.Map;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ErrorResponse {
+public class ErrorResponse<T> {
 	private int status;
-	private Map<String, String> message;
+	private T message;
 }

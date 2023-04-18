@@ -9,10 +9,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.example.bliblitokobukuappbereactive.model.metadata.AuditMetadata;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = Transaction.COLLECTION_NAME)
 public class Transaction extends AuditMetadata {
