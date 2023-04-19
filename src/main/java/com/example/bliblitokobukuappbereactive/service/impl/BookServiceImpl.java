@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.example.bliblitokobukuappbereactive.advice.BookNotFoundException;
 import com.example.bliblitokobukuappbereactive.model.Book;
@@ -53,11 +52,7 @@ public class BookServiceImpl implements BookService {
         });
 
     return responseMono
-        .map(response ->
-                response.getDocs()
-                        .stream()
-                        .map(Book::build)
-                        .collect(Collectors.toList()))
+        .map(response -> response.getDocs().stream().map(Book::build).collect(Collectors.toList()))
         .flatMapMany(books -> bookRepository.saveAll(books));
   }
 
@@ -102,13 +97,13 @@ public class BookServiceImpl implements BookService {
       foundBook.setPrice(bookDTO.getPrice());
       foundBook.setDiscount(bookDTO.getDiscount());
       return bookRepository.save(foundBook);
-    }).switchIfEmpty(
-        Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Book was not found")));
+    }).switchIfEmpty(Mono.error(new BookNotFoundException("Book Not Found")));
   }
 
   @Override
   public Mono<Void> deleteBook(final String id) {
-    return bookRepository.deleteById(id);
+    return bookRepository.deleteById(id)
+        .switchIfEmpty(Mono.error(new BookNotFoundException("Book Not Found")));
   }
 
   @Override
