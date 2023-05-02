@@ -23,7 +23,6 @@ import org.springframework.web.reactive.function.BodyInserters;
 import com.example.bliblitokobukuappbereactive.controller.BookController;
 import com.example.bliblitokobukuappbereactive.model.Book;
 import com.example.bliblitokobukuappbereactive.model.dto.BookDTO;
-import com.example.bliblitokobukuappbereactive.model.dto.embedded.GetBookWebResponse;
 import com.example.bliblitokobukuappbereactive.service.impl.BookServiceImpl;
 import com.github.javafaker.Faker;
 
@@ -55,8 +54,8 @@ public class BookUnitTest {
     public void getAllBookTest() throws ExecutionException, InterruptedException {
 
 
-        when(bookServiceImpl.getBooks(null, 1, 1))
-                .thenReturn(Mono.just(new GetBookWebResponse()));
+//        when(bookServiceImpl.getBooks(null, 1, 1))
+//                .thenReturn(Mono.just(new GetBookWebResponse()));
 
 
         webTestClient.get().uri("/gdn-bookstore-api/books/")

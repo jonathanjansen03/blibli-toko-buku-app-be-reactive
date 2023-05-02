@@ -1,5 +1,6 @@
 package com.example.bliblitokobukuappbereactive;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -46,8 +47,13 @@ public class FreeTrainingTest {
 
   @Test
   public void testFluxMap() {
-    Flux.fromArray(new String[]{"Tom", "Melissa", "Steve", "Megan"})
-            .map(String::toUpperCase)
-            .subscribe(System.out::println);
+//    Flux.fromArray(new String[]{"Tom", "Melissa", "Steve", "Megan"})
+//            .map(String::toUpperCase)
+//            .subscribe(System.out::println);
+
+    List<String> dataStream = new ArrayList<>();
+    Flux.just("X", "Y", "Z")
+            .log()
+            .subscribe(dataStream::add);
   }
 }
