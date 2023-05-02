@@ -101,9 +101,9 @@ public class BookServiceImpl implements BookService {
   }
 
   @Override
-  public Mono<Void> deleteBook(final String id) {
+  public Mono<Boolean> deleteBook(final String id) {
     return bookRepository.deleteById(id)
-        .switchIfEmpty(Mono.error(new BookNotFoundException("Book Not Found")));
+        .switchIfEmpty(Mono.error(new BookNotFoundException("Book Not Found"))).thenReturn(true);
   }
 
   @Override

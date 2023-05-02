@@ -84,13 +84,10 @@ public class BookController {
   @DeleteMapping(path = "/delete/{bookId}")
   @Caching(evict = {@CacheEvict(value = "find-all-books", allEntries = true),
       @CacheEvict(value = "find-by-id", key = "#id")})
-  public Mono<NormalResponse<Void>> deleteBook(@PathVariable("bookId") String id) {
+  public Mono<NormalResponse<Boolean>> deleteBook(@PathVariable("bookId") String id) {
     log.info("#deleteBook with book id: {}", id);
     try {
-      bookService.deleteBook(id);
-      NormalResponse<Void> response =
-          NormalResponse.<Void>builder().status(HttpStatus.OK.value()).data(null).build();
-      return Mono.just(response);
+      return bookService.deleteBook(id).map(this::getResponseDelete);
     } catch (Exception e) {
       log.error("#deleteBook ERROR! errorMessage: {}", e.getMessage(), e);
       return Mono.empty();
@@ -106,9 +103,14 @@ public class BookController {
             .map(this::getResponseMono);
   }
 
-  @NotNull
   private NormalResponse<Book> getResponseMono(Book bookData) {
     return NormalResponse.<Book>builder().status(HttpStatus.OK.value())
         .data(bookData).count(1).build();
+  }
+
+  @NotNull
+  private NormalResponse<Boolean> getResponseDelete(Boolean tes) {
+    return NormalResponse.<Boolean>builder().status(HttpStatus.OK.value())
+            .count(1).build();
   }
 }

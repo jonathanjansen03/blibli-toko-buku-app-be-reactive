@@ -17,7 +17,7 @@ public interface BookService {
 
   Mono<Book> updateBook(final String id, final BookDTO bookDTO);
 
-  Mono<Void> deleteBook(final String id);
+  Mono<Boolean> deleteBook(final String id);
 
   Mono<Book> findBookById(final String id);
 }
